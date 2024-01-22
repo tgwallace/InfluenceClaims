@@ -1,0 +1,154 @@
+name: InfluenceClaims
+version: '1.0'
+main: hardbuckaroo.influenceclaims.InfluenceClaims
+api-version: '1.20'
+depend: [CoreProtect]
+commands:
+  CityCreate:
+    description: Used to create a new city.
+    usage: /CityCreate [city name]
+    aliases: [ccreate]
+  CityLeave:
+    description: Used to leave your city.
+    usage: /CityLeave
+    aliases: [cleave]
+  CityInvite:
+    description: Used to invite player(s) to your city.
+    usage: /CityInvite [playername1] [playername2] [playername3]
+    aliases: [cadd, cityadd, cinvite]
+  CityAccept:
+    description: Used to accept an invite to join a city.
+    usage: /CityAccept
+    aliases: [caccept]
+  CityKick:
+    description: Used to kick player(s) from your city.
+    usage: /CityKick [playername1] [playername2] [playername3]
+    aliases: [ckick]
+  CityInfo:
+    description: Gets information on a city.
+    usage: /CityInfo or /CityInfo [city name]
+    aliases: [cinfo]
+  CitySet:
+    description: Used to manage city settings.
+    usage: /CitySet
+    aliases: [cset]
+  CityList:
+    description: Returns a list of cities.
+    usage: /CityList
+    aliases: [clist]
+  CityPlotCreate:
+    description: Turns on plot creation.
+    usage: /CityPlotCreate
+    aliases: [cplotcreate,plotcreate]
+  CityPlotExpand:
+    description: Turns on plot expansion mode.
+    usage: /CityPlotExpand
+    aliases: [cplotexpand,plotexpand]
+  CityPlotWhitelist:
+    description: Adds players to a plot whitelist.
+    usage: /CityPlotWhitelist [playername1] [playername2] [playername3]
+    aliases: [cplotwhitelist,plotwhitelist]
+  CityPlotRemove:
+    description: Removes players from a plot whitelist.
+    usage: /CityPlotRemove [playername1] [playername2] [playername3]
+    aliases: [cplotremove,plotremove]
+  CityPlotTransfer:
+    description: Transfers ownership of a plot to another player.
+    usage: /CityPlotTransfer [playername]
+    aliases: [cplottransfer,plottransfer]
+  CityPlotRevoke:
+    description: Revokes ownership of a plot from another player.
+    usage: /CityPlotRevoke
+    aliases: [cplotrevoke,plotrevoke]
+  CityPlotManage:
+    description: Allows plot owner to manage plot settings.
+    usage: /CityPlotManage [setting] [input]
+    aliases: [cplotmanage,plotmanage]
+  CityPlotInfo:
+    description: Shows info for the plot that you're standing in.
+    usage: /CityPlotInfo
+    aliases: [cplotinfo,plotinfo,plot]
+  CityVote:
+    description: Opens voting menu for city.
+    usage: /CityVote
+    aliases: [cvote]
+  CityOverthrow:
+    description: Used to call for a vote to overthrow the leader.
+    usage: /CityOverthrow
+    aliases: [coverthrow]
+  CitySpecialElection:
+    description: Used to call for a special election in Democracies or Oligarchies.
+    usage: /CitySpecialElection
+    aliases: [cspecialelection]
+  CityChat:
+    description: Toggles chat channel between City and World.
+    usage: /CityChat
+    aliases: [cc,cchat]
+  CityChunk:
+    description: Gets claims information on current chunk.
+    usage: /CityChunk
+    aliases: [cchunk,chunk]
+  CityChunkBoost:
+    description: Allows players to spend money in exchange for influence in the chunk they're standing in.
+    usage: /CityChunkBoost [value]
+    aliases: [cchunkboost]
+  NationCreate:
+    description: Allows city leaders to create a nation.
+    usage: /NationCreate [name]
+    aliases: [ncreate]
+  NationInvite:
+    description: Allows nation leaders to invite cities to their nation.
+    usage: /NationInvite [cityname]
+    aliases: [ninvite]
+  NationChat:
+    description: Toggles nation chat channel.
+    usage: /NationChat
+    aliases: [nc, nchat]
+  NationSet:
+    description: Used to manage nation settings.
+    usage: /NationSet
+    aliases: [nset]
+  NationVote:
+    description: Opens voting menu for nation.
+    usage: /NationVote
+    aliases: [nvote]
+  NationInfo:
+    description: Gets information on a nation.
+    usage: /NationInfo [name]
+    aliases: [ninfo]
+  NationList:
+    description: Lists all nations.
+    usage: /NationList
+    aliases: [nlist]
+  NationKick:
+    description: Kicks a city out of the nation.
+    usage: /NationKick [city]
+    aliases: [nkick]
+  NationLeave:
+    description: Leaves a nation.
+    usage: /NationLeave
+    aliases: [nleave]
+  NationSpecialElection:
+    description: Used to call for a special election in nations.
+    usage: /NationSpecialElection
+    aliases: [nspecialelection]
+  NationOverthrow:
+    description: Handles calls to overthrow the nation leader.
+    usage: /NationOverthrow
+    aliases: [noverthrow]
+  CityHome:
+    description: Teleports you to your city's home location.
+    usage: /CityHome
+    aliases: [chome]
+  CityUnclaim:
+    description: Removes your city's claims in the chunk you are standing in.
+    usage: /CityUnclaim
+    aliases: [cunclaim]
+  CityRole:
+    description: Allows city leader to manage roles.
+    usage: /CityRole [add, remove, create, delete, or permissions]
+    aliases: [crole]
+  CityChunkMonitor:
+    description: Allows players to monitor claim level in chunks.
+    usage: /CityChunkMonitor
+    aliases: [cchunkmonitor,chunkmonitor,monitor]

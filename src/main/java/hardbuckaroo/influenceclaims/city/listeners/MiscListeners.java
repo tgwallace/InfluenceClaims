@@ -1,0 +1,128 @@
+package hardbuckaroo.influenceclaims.city.listeners;
+
+import hardbuckaroo.influenceclaims.city.CheckProtection;
+import hardbuckaroo.influenceclaims.InfluenceClaims;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+
+import java.util.Arrays;
+import java.util.List;
+
+public class MiscListeners implements Listener {
+
+    private final InfluenceClaims plugin;
+
+    public MiscListeners(InfluenceClaims plugin){
+        this.plugin = plugin;
+    }
+
+    @EventHandler
+    public void onBucketEmptyEvent(PlayerBucketEmptyEvent event) {
+        FileConfiguration playerData = plugin.getPlayerData();
+        FileConfiguration cityData = plugin.getCityData();
+        Block block = event.getBlock();
+        String playerUUID = event.getPlayer().getUniqueId().toString();
+        String cityUUID = playerData.getString(playerUUID+".City");
+        String claimant = plugin.getClaimant(plugin.getChunkKey(block.getChunk()));
+
+        if((claimant != null && !claimant.equalsIgnoreCase(cityUUID))){
+            event.getPlayer().sendRawMessage("This land is claimed by " + cityData.getString(claimant+".Name") + "!");
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onBlockIgniteEvent(BlockIgniteEvent event) {
+        Block block = event.getBlock();
+        Player player = event.getPlayer();
+
+        CheckProtection cp = new CheckProtection(plugin);
+        if(player != null && cp.checkProtection(block, player)){
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void signChangeEvent(SignChangeEvent event) {
+        Block block = event.getBlock();
+        String playerUUID = event.getPlayer().getUniqueId().toString();
+        FileConfiguration playerData = plugin.getPlayerData();
+        String cityUUID = playerData.getString(playerUUID+".City");
+        FileConfiguration cityData = plugin.getCityData();
+        String claimant = plugin.getClaimant(plugin.getChunkKey(block.getChunk()));
+
+        if((claimant != null && !claimant.equalsIgnoreCase(cityUUID))){
+            event.getPlayer().sendRawMessage("This land is claimed by " + cityData.getString(claimant+".Name") + "!");
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onEntityExplodeEvent(EntityExplodeEvent event) {
+        List<Block> blockList = event.blockList();
+        CheckProtection cp = new CheckProtection(plugin);
+
+        blockList.removeIf(cp::checkProtection);
+    }
+
+    @EventHandler
+    public void onBlockExplodeEvent(BlockExplodeEvent event) {
+        List<Block> blockList = event.blockList();
+        CheckProtection cp = new CheckProtection(plugin);
+
+        blockList.removeIf(cp::checkProtection);
+    }
+
+    @EventHandler
+    public void onMonsterSpawn(CreatureSpawnEvent event) {
+        if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL && event.getEntity() instanceof Monster) {
+            CheckProtection cp = new CheckProtection(plugin);
+            if(cp.checkProtection(event.getLocation().getBlock())){
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onChestOpenEvent(PlayerInteractEvent event){
+        if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
+            FileConfiguration playerData = plugin.getPlayerData();
+            FileConfiguration cityData = plugin.getCityData();
+            Block block = event.getClickedBlock();
+            Material material = block.getType();
+            String name = material.name();
+            String playerUUID = event.getPlayer().getUniqueId().toString();
+            String cityUUID = playerData.getString(playerUUID+".City");
+            String claimant = plugin.getClaimant(plugin.getChunkKey(block.getChunk()));
+            if((name.contains("BUTTON") || name.contains("DOOR") || name.contains("PRESSURE") || name.contains("GATE") ||
+                    (Arrays.asList(Material.CHEST, Material.CHEST_MINECART, Material.TRAPPED_CHEST,
+                    Material.FURNACE, Material.BLAST_FURNACE, Material.FURNACE_MINECART, Material.SMOKER,
+                    Material.BARREL, Material.HOPPER, Material.HOPPER_MINECART, Material.LEVER, Material.ENCHANTING_TABLE,
+                    Material.ARMOR_STAND, Material.BREWING_STAND, Material.BEEHIVE, Material.BEE_NEST,
+                    Material.BUNDLE, Material.CAMPFIRE, Material.SOUL_CAMPFIRE, Material.CAULDRON, Material.LAVA_CAULDRON,
+                    Material.CHISELED_BOOKSHELF, Material.DISPENSER, Material.DROPPER, Material.FLOWER_POT,
+                    Material.ITEM_FRAME, Material.JUKEBOX, Material.LECTERN, Material.SHULKER_BOX).contains(material))) && (claimant != null && !claimant.equalsIgnoreCase(cityUUID))) {
+                String stance = cityData.getString(claimant+".Stances."+cityUUID);
+                if(stance != null && stance.equalsIgnoreCase("Friendly") && (name.contains("BUTTON") || name.contains("DOOR") || name.contains("PRESSURE") || name.contains("GATE") || material.equals(Material.LEVER))) {
+                    return;
+                }
+
+                event.getPlayer().sendRawMessage("This land is claimed by " + cityData.getString(claimant+".Name") + "!");
+                event.setCancelled(true);
+            }
+        }
+    }
+}
