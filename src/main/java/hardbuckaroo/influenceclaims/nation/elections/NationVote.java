@@ -12,6 +12,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class NationVote implements CommandExecutor, Listener {
@@ -78,6 +80,11 @@ public class NationVote implements CommandExecutor, Listener {
                     }   else if (issue.equalsIgnoreCase("kickcity")) {
                         message.addExtra(plugin.color("\n&lKick the city of " + cityData.getString(nationData.getString(nationUUID+".Elections.AddCity.City")+".Name") + " out of " + nationData.getString(nationUUID+".Name")));
                     }
+                    LocalDate electionStart = LocalDate.parse(Objects.requireNonNull(cityData.getString(nationUUID + ".Elections." + issue + ".StartDate")));
+                    LocalDate today = LocalDate.now();
+                    double interval = plugin.getConfig().getDouble("ElectionLength");
+                    int daysLeft = (int) (interval - ChronoUnit.DAYS.between(electionStart, today));
+                    message.addExtra(plugin.color(" - &o"+daysLeft+" days remain"));
                     message.addExtra(plugin.color("\n&oClick an option below to cast your vote!"));
 
                     Map<String, Integer> map = new LinkedHashMap<String, Integer>();

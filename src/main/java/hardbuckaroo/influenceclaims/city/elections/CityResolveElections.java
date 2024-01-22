@@ -235,7 +235,6 @@ public class CityResolveElections {
                                 nationData.set(nationUUID + ".Color", "&f");
                                 nationData.set(nationUUID + ".Motto", " ");
                                 nationData.set(nationUUID + ".LeaderTitle", "President");
-                                nationData.set(nationUUID + ".NobilityTitle", "Cabinet Member");
                                 nationData.set(nationUUID + ".CitizenTitle", "Citizen");
                                 nationData.set(nationUUID + ".Government", cityData.getString(cityUUID+".Government"));
                                 nationData.set(nationUUID+".Tag", Objects.requireNonNull(cityData.getString(cityUUID + ".Elections.NewNation.Name")).substring(0,Math.min(Objects.requireNonNull(cityData.getString(cityUUID + ".Elections.NewNation.Name")).length(),5)).replace(" ",""));
