@@ -27,7 +27,7 @@ public class CityResolveElections {
         CityStartElection cityStartElection = new CityStartElection(plugin);
         ManageCityLegitimacy manageCityLegitimacy = new ManageCityLegitimacy(plugin);
 
-        if(cityData.getKeys(false).size() == 0){
+        if(cityData.getKeys(false).isEmpty()){
             return;
         }
 
@@ -38,11 +38,7 @@ public class CityResolveElections {
                 for(String issue : Objects.requireNonNull(cityData.getConfigurationSection(cityUUID + ".Elections")).getKeys(false)) {
                     LocalDate electionStart = LocalDate.parse(Objects.requireNonNull(cityData.getString(cityUUID + ".Elections." + issue + ".StartDate")));
                     boolean quickResolve = false;
-                    boolean requiresSuperMajority = false;
-
-                    if(issue.equalsIgnoreCase("Overthrow") || issue.equalsIgnoreCase("SpecialElection") || issue.equalsIgnoreCase("Government") || issue.equalsIgnoreCase("LeaveNation")) {
-                        requiresSuperMajority = true;
-                    }
+                    boolean requiresSuperMajority = issue.equalsIgnoreCase("Overthrow") || issue.equalsIgnoreCase("SpecialElection") || issue.equalsIgnoreCase("Government") || issue.equalsIgnoreCase("LeaveNation");
 
                     if(issue.equalsIgnoreCase("Overthrow")) {
                         victoryThreshold = cityData.getDouble(cityUUID+".Legitimacy");
@@ -118,7 +114,7 @@ public class CityResolveElections {
 
                         if(issue.equalsIgnoreCase("leader")) {
                             String winnerName = Bukkit.getOfflinePlayer(UUID.fromString(Objects.requireNonNull(winner))).getName();
-                            if(winner.equalsIgnoreCase(current)) {
+                            if(winner.equalsIgnoreCase(current) && !tie) {
                                 plugin.cityMessage(cityUUID, "The election has ended, " + winnerName + " will remain the " + cityData.getString(cityUUID + ".LeaderTitle") + " of " + cityData.getString(cityUUID + ".Name") + "!", true);
                             } else if (!tie) {
                                 cityData.set(cityUUID+".Leader",winner);
@@ -242,7 +238,7 @@ public class CityResolveElections {
                                 nationData.set(nationUUID + ".NobilityTitle", "Cabinet Member");
                                 nationData.set(nationUUID + ".CitizenTitle", "Citizen");
                                 nationData.set(nationUUID + ".Government", cityData.getString(cityUUID+".Government"));
-                                nationData.set(nationUUID+".Tag", Objects.requireNonNull(cityData.getString(cityUUID + ".Elections.NewNation.Name")).substring(0,Math.min(cityData.getString(cityUUID+".Elections.NewNation.Name").length(),5)).replace(" ",""));
+                                nationData.set(nationUUID+".Tag", Objects.requireNonNull(cityData.getString(cityUUID + ".Elections.NewNation.Name")).substring(0,Math.min(Objects.requireNonNull(cityData.getString(cityUUID + ".Elections.NewNation.Name")).length(),5)).replace(" ",""));
                                 List<String> cityList = Collections.singletonList(cityUUID);
                                 nationData.set(nationUUID+".Cities",cityList);
                                 cityData.set(cityUUID+".Nation",nationUUID);
@@ -266,8 +262,8 @@ public class CityResolveElections {
                                 plugin.cityMessage(cityUUID,"The city of " + cityData.getString(cityUUID+".Name") + " has voted against joining the nation of "+nationData.getString(nationUUID+".Name")+".");
                             }
                         } else if (issue.equalsIgnoreCase("LeaveNation")) {
+                            String nationUUID = cityData.getString(cityUUID+".Nation");
                             if(winner.equalsIgnoreCase("Yes")) {
-                                String nationUUID = cityData.getString(cityUUID+".Nation");
                                 String nationName = nationData.getString(nationUUID+".Name");
                                 cityData.set(cityUUID+".Nation",null);
                                 plugin.saveCityData();
@@ -280,7 +276,6 @@ public class CityResolveElections {
                                 plugin.nationMessage(nationUUID,"The city of " + cityName + " has seceded from our nation!",true);
                                 plugin.cityMessage(cityUUID,"Our city has seceded from the nation of " + nationName + "!",true);
                             } else {
-                                String nationUUID = cityData.getString(cityUUID+".Nation");
                                 plugin.nationMessage(nationUUID,"The city of " + cityData.getString(cityUUID+".Name") + " has voted against seceding from our nation!",true);
                             }
                         }
