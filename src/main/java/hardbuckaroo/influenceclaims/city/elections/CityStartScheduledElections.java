@@ -18,16 +18,18 @@ public class CityStartScheduledElections {
         LocalDate today = LocalDate.now();
         int interval = plugin.getConfig().getInt("ElectionFrequency");
 
-        if(cityData.getKeys(false).size() == 0){
+        if(cityData.getKeys(false).isEmpty()){
             return;
         }
 
         for(String cityUUID : cityData.getKeys(false)) {
-            if(Objects.requireNonNull(cityData.getString(cityUUID + ".Government")).equalsIgnoreCase("Democracy") || Objects.requireNonNull(cityData.getString(cityUUID + ".Government")).equalsIgnoreCase("Oligarchy")) {
+            if((Objects.requireNonNull(cityData.getString(cityUUID + ".Government")).equalsIgnoreCase("Democracy") || Objects.requireNonNull(cityData.getString(cityUUID + ".Government")).equalsIgnoreCase("Oligarchy")) && !cityData.contains(cityUUID+".Elections.Overthrow")) {
                 LocalDate lastElection = LocalDate.parse(Objects.requireNonNull(cityData.getString(cityUUID + ".LastElection")));
                 if(ChronoUnit.DAYS.between(lastElection, today) >= interval && !cityData.contains(cityUUID+".Elections.Leader")) {
                     CityStartElection cityStartElection = new CityStartElection(plugin);
                     cityStartElection.startElection(cityUUID);
+                    if(cityData.contains(cityUUID+".Elections.SpecialElection"))
+                        cityData.set(cityUUID+".Elections.SpecialElection",null);
                 }
             }
         }
