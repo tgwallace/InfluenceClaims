@@ -116,7 +116,9 @@ public class MiscListeners implements Listener {
                     Material.CHISELED_BOOKSHELF, Material.DISPENSER, Material.DROPPER, Material.FLOWER_POT,
                     Material.ITEM_FRAME, Material.JUKEBOX, Material.LECTERN, Material.SHULKER_BOX).contains(material))) && (claimant != null && !claimant.equalsIgnoreCase(cityUUID))) {
                 String stance = cityData.getString(claimant+".Stances."+cityUUID);
-                if(stance != null && stance.equalsIgnoreCase("Friendly") && (name.contains("BUTTON") || name.contains("DOOR") || name.contains("PRESSURE") || name.contains("GATE") || material.equals(Material.LEVER))) {
+                String nationUUID = cityData.getString(cityUUID+".Nation");
+                String claimantUUID = cityData.getString(claimant+".Nation");
+                if(((stance != null && stance.equalsIgnoreCase("Friendly")) || (claimantUUID != null && claimantUUID.equalsIgnoreCase(nationUUID))) && (name.contains("BUTTON") || name.contains("DOOR") || name.contains("PRESSURE") || name.contains("GATE") || material.equals(Material.LEVER))) {
                     return;
                 }
 
