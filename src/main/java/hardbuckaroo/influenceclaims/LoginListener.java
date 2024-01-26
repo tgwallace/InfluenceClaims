@@ -2,6 +2,7 @@ package hardbuckaroo.influenceclaims;
 
 import hardbuckaroo.influenceclaims.InfluenceClaims;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -11,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -39,7 +41,7 @@ public class LoginListener implements Listener {
         }
 
         List<String> messages = playerData.getStringList(playerUUID+".Messages");
-        if(messages.size() > 0) {
+        if(!messages.isEmpty()) {
             player.sendRawMessage(plugin.color("&lWhile you were gone, you missed the following messages:"));
             for (String message : messages) {
                 player.sendRawMessage(message);
@@ -55,6 +57,8 @@ public class LoginListener implements Listener {
 
             player.setPlayerListName(plugin.color(cityColor + "[" + cityTag + "]&f") + player.getName());
             InfluenceClaims.getChat().setPlayerPrefix(player,plugin.color(cityColor + "[" + cityTag + "]&f"));
+
+            plugin.updateScoreboard();
 
             if (cityData.contains(cityUUID + ".Elections")) {
                 List<String> cityElectorate = new ArrayList<>();

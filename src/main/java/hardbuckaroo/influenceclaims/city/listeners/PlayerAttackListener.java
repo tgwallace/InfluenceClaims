@@ -56,21 +56,19 @@ public class PlayerAttackListener implements Listener {
             return;
         }
 
-        if((attackerCityUUID == null || defenderCityUUID == null) && claimant != null) {
+        if(attackerCityUUID != null && attackerCityUUID.equalsIgnoreCase(defenderCityUUID)) {
             event.setCancelled(true);
-            attacker.sendRawMessage("You cannot attack neutral players in claimed territory!");
-        } else if (attackerCityUUID == null || defenderCityUUID == null) {
-            return;
-        } else if (attackerNation != null && attackerNation.equalsIgnoreCase(defenderNation)) {
+            attacker.sendRawMessage("You cannot attack members of your city outside arena plots!");
+        }
+        else if(attackerNation != null && attackerNation.equalsIgnoreCase(defenderNation)) {
             event.setCancelled(true);
-            attacker.sendRawMessage("Cannot attack fellow nation members outside of an arena plot!");
-        }else if (attackerCityUUID.equalsIgnoreCase(defenderCityUUID)) {
-            event.setCancelled(true);
-            attacker.sendRawMessage("Cannot attack fellow city members outside of an arena plot!");
-        } else if(attackerStance != null && attackerStance.equalsIgnoreCase("Friendly") && defenderStance != null && defenderStance.equalsIgnoreCase("Friendly")){
+            attacker.sendRawMessage("You cannot attack members of your nation outside arena plots!");
+        }
+        else if(attackerStance != null && defenderStance != null && attackerStance.equalsIgnoreCase("Friendly") && defenderStance.equalsIgnoreCase("Friendly")) {
             event.setCancelled(true);
             attacker.sendRawMessage("You cannot attack " + defender.getName() + " because your cities are friendly with one another!");
-        } else if (claimant != null && attackerStance != null && !attackerStance.equalsIgnoreCase("Hostile") && defenderStance != null && !defenderStance.equalsIgnoreCase("Hostile")) {
+        }
+        else if(claimant != null && (attackerStance == null || !attackerStance.equalsIgnoreCase("Hostile")) && (defenderStance == null || !defenderStance.equalsIgnoreCase("Hostile"))) {
             event.setCancelled(true);
             attacker.sendRawMessage("You cannot attack neutral players in claimed territory!");
         }

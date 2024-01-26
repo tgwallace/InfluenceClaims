@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -59,9 +60,17 @@ public class CityKick implements CommandExecutor {
                 sender.sendRawMessage("You cannot kick yourself from a city. Use /CityLeave to leave instead.");
             } else if(!cityData.contains(cityUUID + ".Players."+recipient.getUniqueId().toString())){
                 sender.sendRawMessage("Could not locate a player named " + name + " in " + cityData.getString(cityUUID+".Name") + ".");
-            } else if (!Objects.requireNonNull(cityData.getString(cityUUID + ".Leader")).equalsIgnoreCase(senderUUID) && nobles.contains(senderUUID) && nobles.contains(recipient.getUniqueId().toString())){
-                sender.sendRawMessage("Cannot kick a fellow " + cityData.getString(cityUUID+".NobilityTitle") + " from the city!");
             } else {
+                //Make sure other player doesn't have a role:
+                if(cityData.contains(cityUUID+".Roles")) {
+                    for(String role : cityData.getConfigurationSection(cityUUID+".Roles").getKeys(false)) {
+                        if(cityData.getStringList(cityUUID+".Roles."+role+".Players").contains(recipient.getUniqueId().toString())) {
+                            sender.sendRawMessage("Only the " + cityData.getString(cityUUID + ".Leader") + " can kick players who have roles!");
+                            return true;
+                        }
+                    }
+                }
+
                 //Remove player in cityData:
                 cityData.set(cityUUID + ".Players."+recipient.getUniqueId().toString(),null);
                 plugin.saveCityData();
@@ -81,6 +90,7 @@ public class CityKick implements CommandExecutor {
                 }
                 sender.sendRawMessage(name + " has been kicked out of " + cityData.getString(cityUUID + ".Name")+".");
                 manageCityLegitimacy.subtractLegitimacy(cityUUID,0.10);
+                plugin.updateScoreboard();
             }
         }
         return true;

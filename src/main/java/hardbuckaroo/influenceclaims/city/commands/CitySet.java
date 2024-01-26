@@ -123,6 +123,7 @@ public class CitySet implements CommandExecutor {
                 } else {
                     sender.sendRawMessage("Invalid input. Options are Hostile, Friendly, or Neutral.");
                 }
+                plugin.updateScoreboard();
             } else if (targetCityUUID == null) {
                 sender.sendRawMessage("Could not find a city named " + targetCityName + ". Please check your spelling and try again. Correct usage is /CitySet Stance [stance] [city].");
             } else {

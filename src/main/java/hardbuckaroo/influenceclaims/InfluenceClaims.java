@@ -31,13 +31,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class InfluenceClaims extends JavaPlugin {
@@ -535,5 +533,48 @@ public class InfluenceClaims extends JavaPlugin {
             }
         }
         return null;
+    }
+
+    public void updateScoreboard() {
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            String playerUUID = player.getUniqueId().toString();
+            if (playerData.contains(playerUUID + ".City")) {
+                String cityUUID = playerData.getString(playerUUID+".City");
+                ScoreboardManager manager = Bukkit.getScoreboardManager();
+                Scoreboard board = manager.getNewScoreboard();
+
+                Team ally = board.registerNewTeam("Ally");
+                ally.setPrefix(color("[&bA&f]"));
+                Team neutral = board.registerNewTeam("Neutral");
+                neutral.setPrefix("[&7N&f]");
+                Team friendly = board.registerNewTeam("Friendly");
+                friendly.setPrefix("[&aF&f]");
+                Team hostile = board.registerNewTeam("Hostile");
+                hostile.setPrefix("[&cH&f]");
+                Team unaligned = board.registerNewTeam("Unaligned");
+                unaligned.setPrefix("[&7U&f]");
+
+                for (Player viewed : Bukkit.getOnlinePlayers()) {
+                    String viewedName = viewed.getName();
+                    if (playerData.contains(viewed.getUniqueId().toString() + ".City")) {
+                        String viewedCityUUID = playerData.getString(viewed.getUniqueId().toString() + ".City");
+                        String stance = cityData.getString(viewedCityUUID + ".Stances."+cityUUID);
+                        if (cityUUID.equalsIgnoreCase(viewedCityUUID) || (cityData.contains(cityUUID+".Nation") && cityData.contains(viewedCityUUID+".Nation") && cityData.getString(cityUUID+".Nation").equalsIgnoreCase(cityData.getString(viewedCityUUID+".Nation")))) {
+                           ally.addEntry(viewedName);
+                        } else if(stance == null) {
+                            neutral.addEntry(viewedName);
+                        } else if (stance.equalsIgnoreCase("Friendly")) {
+                            friendly.addEntry(viewedName);
+                        } else if (stance.equalsIgnoreCase("Hostile")) {
+                            hostile.addEntry(viewedName);
+                        }
+                    } else {
+                        unaligned.addEntry(viewedName);
+                    }
+                }
+                System.out.println(player.getName() + " " + board.getEntryTeam(player.getName()).getName());
+                player.setScoreboard(board);
+            }
+        }
     }
 }

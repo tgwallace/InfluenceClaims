@@ -66,6 +66,8 @@ public class CityAccept implements CommandExecutor {
                 String cityTag = cityData.getString(invite+".Tag");
                 player.setPlayerListName(plugin.color(color + "[" + cityTag + "]&f") + player.getName());
                 InfluenceClaims.getChat().setPlayerPrefix(player,plugin.color(color + "[" + cityTag + "]&f"));
+
+                plugin.updateScoreboard();
             }
             return true;
         }

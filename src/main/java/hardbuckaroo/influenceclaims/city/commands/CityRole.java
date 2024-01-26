@@ -53,7 +53,7 @@ public class CityRole implements CommandExecutor {
                 else if(cityData.getStringList(cityUUID+".Players").contains(addedUUID)){
                     List<String> nobilityList = cityData.getStringList(cityUUID+".Roles."+title+".Players");
                     nobilityList.add(addedUUID);
-                    cityData.set(cityUUID+".Roles."+title,nobilityList);
+                    cityData.set(cityUUID+".Roles."+title+".Players",nobilityList);
 
                     plugin.cityMessage(cityUUID,cityData.getString(cityUUID+".Color")+strings[1] + " has been promoted to " + title + " of " + cityData.getString(cityUUID+".Name") + "!",true);
                     plugin.playerMessage(addedUUID,"You have been promoted to the role of " + title + "!");

@@ -78,6 +78,7 @@ public class CityLeave implements CommandExecutor, Listener {
             }
             plugin.saveCityData();
             plugin.savePlayerData();
+            plugin.updateScoreboard();
             return true;
         }
     }
