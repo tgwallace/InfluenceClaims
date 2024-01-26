@@ -51,12 +51,7 @@ public class LoginListener implements Listener {
         
         if(playerData.contains(playerUUID+".City")) {
             String cityUUID = playerData.getString(playerUUID + ".City");
-            String cityColor = cityData.getString(cityUUID + ".Color");
             String cityName = cityData.getString(cityUUID + ".Name");
-            String cityTag = cityData.getString(cityUUID+".Tag");
-
-            player.setPlayerListName(plugin.color(cityColor + "[" + cityTag + "]&f") + player.getName());
-            InfluenceClaims.getChat().setPlayerPrefix(player,plugin.color(cityColor + "[" + cityTag + "]&f"));
 
             plugin.updateScoreboard();
 
@@ -75,9 +70,6 @@ public class LoginListener implements Listener {
                     }
                 }
             }
-        } else {
-            player.setPlayerListName(player.getName());
-            InfluenceClaims.getChat().setPlayerPrefix(player,"");
         }
 
         if(cityData.contains(playerData.getString(playerUUID+".City")+".Nation")) {

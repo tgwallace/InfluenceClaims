@@ -540,19 +540,24 @@ public class InfluenceClaims extends JavaPlugin {
             String playerUUID = player.getUniqueId().toString();
             if (playerData.contains(playerUUID + ".City")) {
                 String cityUUID = playerData.getString(playerUUID+".City");
+                String cityColor = cityData.getString(cityUUID + ".Color");
+                String cityTag = cityData.getString(cityUUID+".Tag");
+
+                player.setPlayerListName(color(cityColor + "[" + cityTag + "]&f") + player.getName());
+                InfluenceClaims.getChat().setPlayerPrefix(null,player,color(cityColor + "[" + cityTag + "]&f"));
                 ScoreboardManager manager = Bukkit.getScoreboardManager();
                 Scoreboard board = manager.getNewScoreboard();
 
                 Team ally = board.registerNewTeam("Ally");
                 ally.setPrefix(color("[&bA&f]"));
                 Team neutral = board.registerNewTeam("Neutral");
-                neutral.setPrefix("[&7N&f]");
+                neutral.setPrefix(color("[&7N&f]"));
                 Team friendly = board.registerNewTeam("Friendly");
-                friendly.setPrefix("[&aF&f]");
+                friendly.setPrefix(color("[&aF&f]"));
                 Team hostile = board.registerNewTeam("Hostile");
-                hostile.setPrefix("[&cH&f]");
+                hostile.setPrefix(color("[&cH&f]"));
                 Team unaligned = board.registerNewTeam("Unaligned");
-                unaligned.setPrefix("[&7U&f]");
+                unaligned.setPrefix(color("[&7U&f]"));
 
                 for (Player viewed : Bukkit.getOnlinePlayers()) {
                     String viewedName = viewed.getName();
@@ -573,6 +578,9 @@ public class InfluenceClaims extends JavaPlugin {
                     }
                 }
                 player.setScoreboard(board);
+            } else {
+                player.setPlayerListName(player.getName());
+                InfluenceClaims.getChat().setPlayerPrefix(player,"");
             }
         }
     }

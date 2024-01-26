@@ -62,11 +62,6 @@ public class CityAccept implements CommandExecutor {
                 //Lets city members know that a new member has joined.
                 plugin.cityMessage(invite,cityData.getString(invite+".Color")+player.getName()+" has joined " + cityData.getString(invite+".Name") + "!");
 
-                String color = cityData.getString(invite+".Color");
-                String cityTag = cityData.getString(invite+".Tag");
-                player.setPlayerListName(plugin.color(color + "[" + cityTag + "]&f") + player.getName());
-                InfluenceClaims.getChat().setPlayerPrefix(player,plugin.color(color + "[" + cityTag + "]&f"));
-
                 plugin.updateScoreboard();
             }
             return true;

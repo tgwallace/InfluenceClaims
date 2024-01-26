@@ -188,15 +188,7 @@ public class CitySet implements CommandExecutor {
                 String tag = strings[1];
                 cityData.set(cityUUID+".Tag", tag);
                 sender.sendRawMessage("City tag has been changed to "+tag+"!");
-
-                String cityColor = cityData.getString(cityUUID+".Color");
-                for(String UUIDs : cityData.getStringList(cityUUID+".Players")) {
-                    Player citizen = Bukkit.getServer().getPlayer(UUID.fromString(UUIDs));
-                    if(citizen != null) {
-                        citizen.setPlayerListName(plugin.color(cityColor + "[" + tag + "]&f") + citizen.getName());
-                        InfluenceClaims.getChat().setPlayerPrefix(citizen, plugin.color(cityColor + "[" + tag + "]&f"));
-                    }
-                }
+                plugin.updateScoreboard();
             } else {
                 sender.sendRawMessage("City tag must be 10 characters or less with no spaces!");
             }
