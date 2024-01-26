@@ -572,7 +572,6 @@ public class InfluenceClaims extends JavaPlugin {
                         unaligned.addEntry(viewedName);
                     }
                 }
-                System.out.println(player.getName() + " " + board.getEntryTeam(player.getName()).getName());
                 player.setScoreboard(board);
             }
         }
