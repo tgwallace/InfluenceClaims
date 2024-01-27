@@ -16,6 +16,8 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.Arrays;
@@ -71,6 +73,34 @@ public class MiscListeners implements Listener {
     }
 
     @EventHandler
+    public void playerInteractAtEntityEvent(PlayerInteractAtEntityEvent event) {
+        String playerUUID = event.getPlayer().getUniqueId().toString();
+        FileConfiguration playerData = plugin.getPlayerData();
+        String cityUUID = playerData.getString(playerUUID+".City");
+        FileConfiguration cityData = plugin.getCityData();
+        String claimant = plugin.getClaimant(plugin.getChunkKey(event.getRightClicked().getLocation().getChunk()));
+
+        if((claimant != null && !claimant.equalsIgnoreCase(cityUUID))){
+            event.getPlayer().sendRawMessage("This land is claimed by " + cityData.getString(claimant+".Name") + "!");
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void playerInteractEntityEvent(PlayerInteractEntityEvent event) {
+        String playerUUID = event.getPlayer().getUniqueId().toString();
+        FileConfiguration playerData = plugin.getPlayerData();
+        String cityUUID = playerData.getString(playerUUID+".City");
+        FileConfiguration cityData = plugin.getCityData();
+        String claimant = plugin.getClaimant(plugin.getChunkKey(event.getRightClicked().getLocation().getChunk()));
+
+        if((claimant != null && !claimant.equalsIgnoreCase(cityUUID))){
+            event.getPlayer().sendRawMessage("This land is claimed by " + cityData.getString(claimant+".Name") + "!");
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
     public void onEntityExplodeEvent(EntityExplodeEvent event) {
         List<Block> blockList = event.blockList();
         CheckProtection cp = new CheckProtection(plugin);
@@ -114,7 +144,7 @@ public class MiscListeners implements Listener {
                     Material.ARMOR_STAND, Material.BREWING_STAND, Material.BEEHIVE, Material.BEE_NEST,
                     Material.BUNDLE, Material.CAMPFIRE, Material.SOUL_CAMPFIRE, Material.CAULDRON, Material.LAVA_CAULDRON,
                     Material.CHISELED_BOOKSHELF, Material.DISPENSER, Material.DROPPER, Material.FLOWER_POT,
-                    Material.ITEM_FRAME, Material.JUKEBOX, Material.LECTERN, Material.SHULKER_BOX).contains(material))) && (claimant != null && !claimant.equalsIgnoreCase(cityUUID))) {
+                    Material.ITEM_FRAME, Material.JUKEBOX, Material.LECTERN, Material.SHULKER_BOX, Material.ITEM_FRAME).contains(material))) && (claimant != null && !claimant.equalsIgnoreCase(cityUUID))) {
                 String stance = cityData.getString(claimant+".Stances."+cityUUID);
                 String nationUUID = cityData.getString(cityUUID+".Nation");
                 String claimantUUID = cityData.getString(claimant+".Nation");

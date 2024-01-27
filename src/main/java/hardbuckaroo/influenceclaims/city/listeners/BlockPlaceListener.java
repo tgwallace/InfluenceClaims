@@ -24,6 +24,7 @@ public class BlockPlaceListener implements Listener {
     @EventHandler (priority = EventPriority.HIGHEST)
     public void onBlockPlaceEvent(BlockPlaceEvent event){
         FileConfiguration playerData = plugin.getPlayerData();
+        FileConfiguration cityData = plugin.getCityData();
         Player player = event.getPlayer();
         String cityUUID = playerData.getString(player.getUniqueId().toString()+".City");
 
@@ -39,6 +40,11 @@ public class BlockPlaceListener implements Listener {
         else if (cityUUID == null) return;
 
         if((block.getWorld().getEnvironment() == World.Environment.THE_END && !plugin.getConfig().getBoolean("EndClaims")) || (block.getWorld().getEnvironment() == World.Environment.NETHER && !plugin.getConfig().getBoolean("NetherClaims"))) {
+            return;
+        }
+
+        String[] plot = plugin.getPlot(block);
+        if(plot != null && !plot[0].equalsIgnoreCase(cityUUID) && (cityData.getStringList(plot[0]+".Plots."+plot[1]+".Whitelist").contains(player.getUniqueId().toString()) || cityData.getString(plot[0]+".Plots."+plot[1]+".Owner").equalsIgnoreCase(player.getUniqueId().toString()))) {
             return;
         }
 
