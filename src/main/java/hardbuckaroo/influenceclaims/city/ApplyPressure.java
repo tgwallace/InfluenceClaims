@@ -77,7 +77,6 @@ public class ApplyPressure {
                                 manageClaims.addTempClaim(pressuredChunk, claim, pressure);
                             } else {
                                 manageClaims.addPermClaim(pressuredChunk, claim, pressure);
-                                manageClaims.subtractTempClaim(pressuredChunk, claim, pressure);
                             }
                         }
                     }
