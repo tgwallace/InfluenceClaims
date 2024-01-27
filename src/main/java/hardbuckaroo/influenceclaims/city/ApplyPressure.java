@@ -29,9 +29,8 @@ public class ApplyPressure {
         for(String chunkKey : keys) {
             for (String claim : claimData.getConfigurationSection(chunkKey + ".Claims").getKeys(false)) {
                 int oldValueTemp = claimData.getInt(chunkKey + ".Claims." + claim + ".Temporary");
-                int oldValuePerm = claimData.getInt(chunkKey + ".Claims." + claim + ".Permanent");
 
-                int influenceDecay = ((oldValueTemp - oldValuePerm) / 9) + decayConstant;
+                int influenceDecay = (oldValueTemp / 9) + decayConstant;
 
                 int daysSinceLastAdd = 0;
                 if(claimData.contains(chunkKey + ".Claims." + claim + ".LastAdd")) {
