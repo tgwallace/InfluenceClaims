@@ -5,8 +5,7 @@ import hardbuckaroo.influenceclaims.InfluenceClaims;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -15,10 +14,8 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.player.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -72,7 +69,7 @@ public class MiscListeners implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void playerInteractAtEntityEvent(PlayerInteractAtEntityEvent event) {
         String playerUUID = event.getPlayer().getUniqueId().toString();
         FileConfiguration playerData = plugin.getPlayerData();
@@ -86,8 +83,8 @@ public class MiscListeners implements Listener {
         }
     }
 
-    @EventHandler
-    public void playerInteractEntityEvent(PlayerInteractEntityEvent event) {
+    @EventHandler (ignoreCancelled = true)
+    public void playerArmorStandManipulateEvent(PlayerArmorStandManipulateEvent event) {
         String playerUUID = event.getPlayer().getUniqueId().toString();
         FileConfiguration playerData = plugin.getPlayerData();
         String cityUUID = playerData.getString(playerUUID+".City");
@@ -97,6 +94,33 @@ public class MiscListeners implements Listener {
         if((claimant != null && !claimant.equalsIgnoreCase(cityUUID))){
             event.getPlayer().sendRawMessage("This land is claimed by " + cityData.getString(claimant+".Name") + "!");
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void entitySpawnEvent(EntitySpawnEvent event) {
+        if (event.getEntity() instanceof ArmorStand || event.getEntity() instanceof ItemFrame || event.getEntity() instanceof GlowItemFrame) {
+            double distance = 10;
+            Player player = null;
+            for(Entity entity : event.getLocation().getWorld().getNearbyEntities(event.getLocation(),distance,distance,distance)) {
+                double between = event.getLocation().distance(entity.getLocation());
+                if(entity instanceof Player && between < distance) {
+                    player = (Player) entity;
+                    distance = between;
+                }
+            }
+            if(player != null) {
+                String playerUUID = player.getUniqueId().toString();
+                FileConfiguration playerData = plugin.getPlayerData();
+                String cityUUID = playerData.getString(playerUUID + ".City");
+                FileConfiguration cityData = plugin.getCityData();
+                String claimant = plugin.getClaimant(plugin.getChunkKey(event.getLocation().getChunk()));
+
+                if ((claimant != null && !claimant.equalsIgnoreCase(cityUUID))) {
+                    player.sendRawMessage("This land is claimed by " + cityData.getString(claimant + ".Name") + "!");
+                    event.setCancelled(true);
+                }
+            } else event.setCancelled(true);
         }
     }
 
