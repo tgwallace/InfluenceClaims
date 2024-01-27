@@ -31,8 +31,7 @@ public class ApplyPressure {
                 int oldValueTemp = claimData.getInt(chunkKey + ".Claims." + claim + ".Temporary");
                 int oldValuePerm = claimData.getInt(chunkKey + ".Claims." + claim + ".Permanent");
 
-                int influenceDecay = (oldValueTemp - oldValuePerm) / 8;
-                if (influenceDecay < decayConstant) influenceDecay = decayConstant;
+                int influenceDecay = ((oldValueTemp - oldValuePerm) / 9) + decayConstant;
 
                 int daysSinceLastAdd = 0;
                 if(claimData.contains(chunkKey + ".Claims." + claim + ".LastAdd")) {
@@ -48,9 +47,7 @@ public class ApplyPressure {
                     double decayBoost = (daysSinceLastAdd-decayBoostTimer)*decayBoostModifier;
                     influenceDecay = (int) (influenceDecay*decayBoost);
                 }
-
-                int pressure = (oldValueTemp - oldValuePerm) / 64;
-                if(pressure < 0) pressure = 0;
+                int pressure = oldValueTemp / 81;
 
                 claimData.set(chunkKey+".Claims."+claim+".Pressure",pressure);
                 claimData.set(chunkKey+".Claims."+claim+".InfluenceDecay",influenceDecay);
@@ -69,11 +66,13 @@ public class ApplyPressure {
                 if (pressure > 0) {
                     for(int x=-1;x<=1;x++){
                         for(int z=-1;z<=1;z++){
+                            String[] chunkParts = chunkKey.split(",");
+                            String pressuredChunk = chunkParts[0] + "," + (parseInt(chunkParts[1]) + x) + "," + (parseInt(chunkParts[2]) + z);
                             if(x != 0 || z != 0) {
-                                String[] chunkParts = chunkKey.split(",");
-                                String pressuredChunk = chunkParts[0] + "," + (parseInt(chunkParts[1]) + x) + "," + (parseInt(chunkParts[2]) + z);
-
                                 manageClaims.addTempClaim(pressuredChunk, claim, pressure);
+                            } else {
+                                manageClaims.addPermClaim(pressuredChunk, claim, pressure);
+                                manageClaims.subtractTempClaim(pressuredChunk, claim, pressure);
                             }
                         }
                     }
