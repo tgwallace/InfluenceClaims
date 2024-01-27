@@ -29,8 +29,15 @@ public class ApplyPressure {
         for(String chunkKey : keys) {
             for (String claim : claimData.getConfigurationSection(chunkKey + ".Claims").getKeys(false)) {
                 int oldValueTemp = claimData.getInt(chunkKey + ".Claims." + claim + ".Temporary");
+                int oldValuePerm = claimData.getInt(chunkKey + ".Claims." + claim + ".Permanent");
 
-                int influenceDecay = (oldValueTemp / 9) + decayConstant;
+                int influenceDecay = (int) (oldValueTemp*0.01);
+                int freePressure = (int) (oldValuePerm*0.01);
+
+                int pressure = (influenceDecay+freePressure)/9;
+                if(influenceDecay < decayConstant) pressure = 0;
+
+                influenceDecay += decayConstant;
 
                 int daysSinceLastAdd = 0;
                 if(claimData.contains(chunkKey + ".Claims." + claim + ".LastAdd")) {
@@ -46,7 +53,6 @@ public class ApplyPressure {
                     double decayBoost = (daysSinceLastAdd-decayBoostTimer)*decayBoostModifier;
                     influenceDecay = (int) (influenceDecay*decayBoost);
                 }
-                int pressure = oldValueTemp / 81;
 
                 claimData.set(chunkKey+".Claims."+claim+".Pressure",pressure);
                 claimData.set(chunkKey+".Claims."+claim+".InfluenceDecay",influenceDecay);
