@@ -2,6 +2,7 @@ package hardbuckaroo.influenceclaims.city.listeners;
 
 import hardbuckaroo.influenceclaims.city.CheckProtection;
 import hardbuckaroo.influenceclaims.InfluenceClaims;
+import net.minecraft.world.entity.monster.EnderMan;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,10 +13,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityMountEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -148,6 +146,19 @@ public class MiscListeners implements Listener {
         CheckProtection cp = new CheckProtection(plugin);
 
         blockList.removeIf(cp::checkProtection);
+    }
+
+    @EventHandler
+    public void onEndermanPickupEvent(EntityChangeBlockEvent event) {
+        Entity entity = event.getEntity();
+        if (entity.getType() == EntityType.ENDERMAN) {
+            Block block = event.getBlock();
+            CheckProtection cp = new CheckProtection(plugin);
+
+            if(cp.checkProtection(block)) {
+                event.setCancelled(true);
+            }
+        }
     }
 
     @EventHandler
