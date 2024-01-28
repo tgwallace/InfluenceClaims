@@ -14,8 +14,11 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityMountEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 import java.util.Arrays;
 import java.util.List;
@@ -69,21 +72,36 @@ public class MiscListeners implements Listener {
         }
     }
 
-    @EventHandler (ignoreCancelled = true)
-    public void playerInteractAtEntityEvent(PlayerInteractAtEntityEvent event) {
+    @EventHandler
+    public void trampleEvent(PlayerInteractEvent event) {
+        Block block = event.getClickedBlock();
+        if (event.getAction().equals(Action.PHYSICAL) && block != null) {
+            String playerUUID = event.getPlayer().getUniqueId().toString();
+            FileConfiguration playerData = plugin.getPlayerData();
+            String cityUUID = playerData.getString(playerUUID + ".City");
+            FileConfiguration cityData = plugin.getCityData();
+            String claimant = plugin.getClaimant(plugin.getChunkKey(block.getChunk()));
+
+            if ((claimant != null && !claimant.equalsIgnoreCase(cityUUID))) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void playerInteractEntityEvent(PlayerInteractEntityEvent event) {
+        if(event.getHand() != EquipmentSlot.OFF_HAND) return;
         String playerUUID = event.getPlayer().getUniqueId().toString();
         FileConfiguration playerData = plugin.getPlayerData();
         String cityUUID = playerData.getString(playerUUID+".City");
-        FileConfiguration cityData = plugin.getCityData();
         String claimant = plugin.getClaimant(plugin.getChunkKey(event.getRightClicked().getLocation().getChunk()));
 
         if((claimant != null && !claimant.equalsIgnoreCase(cityUUID))){
-            event.getPlayer().sendRawMessage("This land is claimed by " + cityData.getString(claimant+".Name") + "!");
             event.setCancelled(true);
         }
     }
 
-    @EventHandler (ignoreCancelled = true)
+    @EventHandler
     public void playerArmorStandManipulateEvent(PlayerArmorStandManipulateEvent event) {
         String playerUUID = event.getPlayer().getUniqueId().toString();
         FileConfiguration playerData = plugin.getPlayerData();
