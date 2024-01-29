@@ -32,10 +32,14 @@ public class ApplyPressure {
                 int oldValuePerm = claimData.getInt(chunkKey + ".Claims." + claim + ".Permanent");
 
                 int influenceDecay = (int) (oldValueTemp*0.01);
+                int hardening = influenceDecay/9;
                 int freePressure = (int) (oldValuePerm*0.01);
-
                 int pressure = (influenceDecay+freePressure)/9;
-                if(influenceDecay < decayConstant) pressure = 0;
+
+                if(influenceDecay < decayConstant || influenceDecay < pressure) {
+                    pressure = 0;
+                    hardening = 0;
+                }
 
                 influenceDecay += decayConstant;
 
@@ -56,6 +60,7 @@ public class ApplyPressure {
 
                 claimData.set(chunkKey+".Claims."+claim+".Pressure",pressure);
                 claimData.set(chunkKey+".Claims."+claim+".InfluenceDecay",influenceDecay);
+                claimData.set(chunkKey+".Claims."+claim+".Hardening",hardening);
             }
         }
 
@@ -64,6 +69,7 @@ public class ApplyPressure {
             for (String claim : claimData.getConfigurationSection(chunkKey + ".Claims").getKeys(false)) {
                 int influenceDecay = claimData.getInt(chunkKey+".Claims."+claim+".InfluenceDecay");
                 int pressure = claimData.getInt(chunkKey+".Claims."+claim+".Pressure");
+                int hardening = claimData.getInt(chunkKey+".Claims."+claim+".Hardening");
 
                 ManageClaims manageClaims = new ManageClaims(plugin);
                 manageClaims.subtractTempClaim(chunkKey, claim, influenceDecay);
@@ -76,7 +82,7 @@ public class ApplyPressure {
                             if(x != 0 || z != 0) {
                                 manageClaims.addTempClaim(pressuredChunk, claim, pressure);
                             } else {
-                                manageClaims.addPermClaim(pressuredChunk, claim, pressure);
+                                manageClaims.addPermClaim(pressuredChunk, claim, hardening);
                             }
                         }
                     }
