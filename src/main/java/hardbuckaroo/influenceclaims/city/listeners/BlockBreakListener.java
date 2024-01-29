@@ -45,10 +45,6 @@ public class BlockBreakListener implements Listener {
             return;
         }
 
-        if((block.getWorld().getEnvironment() == World.Environment.THE_END && !plugin.getConfig().getBoolean("EndClaims")) || (block.getWorld().getEnvironment() == World.Environment.NETHER && !plugin.getConfig().getBoolean("NetherClaims"))) {
-            return;
-        }
-
         FileConfiguration playerData = plugin.getPlayerData();
         ManageClaims manageClaims = new ManageClaims(plugin);
 

@@ -29,10 +29,6 @@ public class BrewListener implements Listener {
 
         Block block = event.getBlock();
 
-        if((block.getWorld().getEnvironment() == World.Environment.THE_END && !plugin.getConfig().getBoolean("EndClaims")) || (block.getWorld().getEnvironment() == World.Environment.NETHER && !plugin.getConfig().getBoolean("NetherClaims"))) {
-            return;
-        }
-
         List<String[]> blocklog = CoreProtect.getInstance().getAPI().blockLookup(block, (int)(System.currentTimeMillis() / 1000L));
         String[] mostRecentAction = blocklog.get(blocklog.size()-1);
         String mostRecentPlacer = mostRecentAction[1];

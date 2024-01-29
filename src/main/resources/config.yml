@@ -1,6 +1,6 @@
 # EndClaims and NetherClaims determine whether influence is generated in the End and the Nether.
-EndClaims: true
-NetherClaims: true
+EndClaims: false
+NetherClaims: false
 
 # ClaimMinimum is the amount of influence that is required for a claim to provide fractional protection. ClaimMaximum is the amount of influence required for a claim to provide full protection.
 ClaimMinimum: 500

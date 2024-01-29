@@ -31,10 +31,6 @@ public class EnchantItemListener implements Listener {
 
         Block block = event.getEnchantBlock();
 
-        if((block.getWorld().getEnvironment() == World.Environment.THE_END && !plugin.getConfig().getBoolean("EndClaims")) || (block.getWorld().getEnvironment() == World.Environment.NETHER && !plugin.getConfig().getBoolean("NetherClaims"))) {
-            return;
-        }
-
         Material material = event.getItem().getType();
         String chunkKey = block.getWorld() + "," + block.getChunk().getX() + "," + block.getChunk().getZ();
 

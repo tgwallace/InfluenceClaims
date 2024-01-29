@@ -32,10 +32,6 @@ public class FurnaceExtractListener implements Listener {
 
         Block block = event.getBlock();
 
-        if((block.getWorld().getEnvironment() == World.Environment.THE_END && !plugin.getConfig().getBoolean("EndClaims")) || (block.getWorld().getEnvironment() == World.Environment.NETHER && !plugin.getConfig().getBoolean("NetherClaims"))) {
-            return;
-        }
-
         Material material = event.getItemType();
         int amount = event.getItemAmount();
         String chunkKey = block.getWorld() + "," + block.getChunk().getX() + "," + block.getChunk().getZ();

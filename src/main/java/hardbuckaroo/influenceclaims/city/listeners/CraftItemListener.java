@@ -35,10 +35,6 @@ public class CraftItemListener implements Listener {
         Block block = player.getLocation().getBlock();
         String chunkKey = player.getWorld() + "," + block.getChunk().getX() + "," + block.getChunk().getZ();
 
-        if((block.getWorld().getEnvironment() == World.Environment.THE_END && !plugin.getConfig().getBoolean("EndClaims")) || (block.getWorld().getEnvironment() == World.Environment.NETHER && !plugin.getConfig().getBoolean("NetherClaims"))) {
-            return;
-        }
-
         Material material = event.getCurrentItem().getType();
 
         if(Arrays.asList(Material.BONE_BLOCK, Material.BONE_MEAL,
