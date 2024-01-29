@@ -34,7 +34,7 @@ public class FurnaceExtractListener implements Listener {
 
         Material material = event.getItemType();
         int amount = event.getItemAmount();
-        String chunkKey = block.getWorld() + "," + block.getChunk().getX() + "," + block.getChunk().getZ();
+        String chunkKey = plugin.getChunkKey(block.getChunk());
 
         int blockValue = (plugin.getConfig().getInt("BlockValues." + material.name())*amount)+event.getExpToDrop();
 

@@ -47,7 +47,7 @@ public class CheckProtection {
 
         String playerUUID = player.getUniqueId().toString();
         String city = playerData.getString(playerUUID+".City");
-        String chunkKey = block.getWorld() + "," + block.getChunk().getX() + "," + block.getChunk().getZ();
+        String chunkKey = plugin.getChunkKey(block.getChunk());
 
         int claimTotal = 0;
         String claimant = "";

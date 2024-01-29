@@ -29,7 +29,7 @@ public class BlockPlaceListener implements Listener {
         String cityUUID = playerData.getString(player.getUniqueId().toString()+".City");
 
         Block block = event.getBlockPlaced();
-        String chunkKey = block.getWorld() + "," + block.getChunk().getX() + "," + block.getChunk().getZ();
+        String chunkKey = plugin.getChunkKey(block.getChunk());
 
         CheckProtection cp = new CheckProtection(plugin);
 

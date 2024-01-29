@@ -33,7 +33,7 @@ public class CraftItemListener implements Listener {
         if(event.getSlot() != 0 || cityUUID == null) return;
 
         Block block = player.getLocation().getBlock();
-        String chunkKey = player.getWorld() + "," + block.getChunk().getX() + "," + block.getChunk().getZ();
+        String chunkKey = plugin.getChunkKey(block.getChunk());
 
         Material material = event.getCurrentItem().getType();
 

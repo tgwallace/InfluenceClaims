@@ -32,7 +32,7 @@ public class EnchantItemListener implements Listener {
         Block block = event.getEnchantBlock();
 
         Material material = event.getItem().getType();
-        String chunkKey = block.getWorld() + "," + block.getChunk().getX() + "," + block.getChunk().getZ();
+        String chunkKey = plugin.getChunkKey(block.getChunk());
 
         int blockValue = (20*event.getExpLevelCost()) + plugin.getConfig().getInt("BlockValues." + material.name());
 

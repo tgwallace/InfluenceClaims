@@ -49,7 +49,7 @@ public class BlockBreakListener implements Listener {
         ManageClaims manageClaims = new ManageClaims(plugin);
 
         String cityUUID = playerData.getString(player.getUniqueId().toString()+".City");
-        String chunkKey = block.getWorld() + "," + block.getChunk().getX() + "," + block.getChunk().getZ();
+        String chunkKey = plugin.getChunkKey(block.getChunk());
 
         if(Arrays.asList(Material.SWEET_BERRY_BUSH, Material.POTATOES, Material.BEETROOTS, Material.WHEAT,
                 Material.CARROTS, Material.COCOA).contains(block.getType()) && cityUUID != null) {

@@ -438,7 +438,7 @@ public class InfluenceClaims extends JavaPlugin {
 
     //Returns a chunk key for a given chunk.
     public String getChunkKey(Chunk chunk){
-        return chunk.getWorld()+","+chunk.getX()+","+chunk.getZ();
+        return chunk.getWorld().getName()+","+chunk.getX()+","+chunk.getZ();
     }
 
     //Finds the UUID of a city given its name. Used in player commands that reference a city by name.

@@ -37,7 +37,7 @@ public class BrewListener implements Listener {
         if(player == null) return;
         String cityUUID = playerData.getString(player.getUniqueId().toString()+".City");
         if(cityUUID == null) return;
-        String chunkKey = player.getWorld() + "," + block.getChunk().getX() + "," + block.getChunk().getZ();
+        String chunkKey = plugin.getChunkKey(block.getChunk());
 
         int potionMultiplier = 0;
         if(!event.getResults().get(0).getType().equals(Material.AIR)) potionMultiplier++;
