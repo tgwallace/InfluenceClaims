@@ -35,6 +35,7 @@ public class CraftItemListener implements Listener {
         Block block = player.getLocation().getBlock();
         String chunkKey = plugin.getChunkKey(block.getChunk());
 
+        if(event.getCurrentItem() == null) return;
         Material material = event.getCurrentItem().getType();
 
         if(Arrays.asList(Material.BONE_BLOCK, Material.BONE_MEAL,
