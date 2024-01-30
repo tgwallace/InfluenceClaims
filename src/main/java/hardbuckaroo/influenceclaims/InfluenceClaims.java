@@ -1,6 +1,9 @@
 package hardbuckaroo.influenceclaims;
 
 import hardbuckaroo.influenceclaims.city.*;
+import hardbuckaroo.influenceclaims.city.commands.admin.CityChunkBoostAdmin;
+import hardbuckaroo.influenceclaims.city.commands.admin.CityKickAdmin;
+import hardbuckaroo.influenceclaims.city.commands.admin.CityUnclaimAdmin;
 import hardbuckaroo.influenceclaims.city.elections.*;
 import hardbuckaroo.influenceclaims.city.plots.CheckPlot;
 import hardbuckaroo.influenceclaims.city.commands.*;
@@ -180,6 +183,18 @@ public class InfluenceClaims extends JavaPlugin {
         //Allows city leaders to manage roles.
         CityChunkMonitor cityChunkMonitor = new CityChunkMonitor(this);
         Objects.requireNonNull(getCommand("citychunkmonitor")).setExecutor(cityChunkMonitor);
+        //Admin version of ChunkBoost.
+        CityChunkBoostAdmin cityChunkBoostAdmin = new CityChunkBoostAdmin(this);
+        Objects.requireNonNull(getCommand("citychunkboostadmin")).setExecutor(cityChunkBoostAdmin);
+        //Admin version of CityKick:
+        CityKickAdmin cityKickAdmin = new CityKickAdmin(this);
+        Objects.requireNonNull(getCommand("citykickadmin")).setExecutor(cityKickAdmin);
+        //Allows admins to unclaim chunks.
+        CityUnclaimAdmin cityUnclaimAdmin = new CityUnclaimAdmin(this);
+        Objects.requireNonNull(getCommand("cityunclaimadmin")).setExecutor(cityUnclaimAdmin);
+        //Removes a set of corners from a plot.
+        PlotShrinkCity plotShrinkCity = new PlotShrinkCity(this);
+        Objects.requireNonNull(getCommand("plotshrinkcity")).setExecutor(plotShrinkCity);
 
 
         //Registering events.

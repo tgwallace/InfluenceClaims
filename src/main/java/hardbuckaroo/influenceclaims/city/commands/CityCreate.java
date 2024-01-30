@@ -33,7 +33,7 @@ public class CityCreate implements CommandExecutor {
             return true;
         }
         else {
-            for(String string : cityData.getConfigurationSection("").getKeys(false)){
+            for(String string : cityData.getKeys(false)){
                 if(cityData.getString(string+".Name").equalsIgnoreCase(name)){
                     player.sendRawMessage("A city with that name already exists.");
                     return true;

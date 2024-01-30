@@ -88,7 +88,6 @@ public class PlotExpandListenerCity implements Listener {
             String plotString = block.getWorld().getName()+"|"+block1[0] + "," + block1[1] + "," + block1[2] + ":" + block2[0] + "," + block2[1] + "," + block2[2];
             String plotUUID = playerData.getString(playerUUID+".PlotExpanding");
 
-
             List<String> coordsList = cityData.getStringList(cityUUID+".Plots."+plotUUID+".Coords");
             coordsList.add(plotString);
             cityData.set(cityUUID+".Plots."+plotUUID+".Coords",coordsList);

@@ -152,3 +152,19 @@ commands:
     description: Allows players to monitor claim level in chunks.
     usage: /CityChunkMonitor
     aliases: [cchunkmonitor,chunkmonitor,monitor]
+  CityChunkBoostAdmin:
+    description: Allows admin to choose a claim to boost in a chunk.
+    usage: /CityChunkBoostAdmin [Amount] [City Name]
+    permission: op
+  CityKickAdmin:
+    description: Allows admin to kick players from a city.
+    usage: /CityChunkBoostAdmin [UserName] [City Name]
+    permission: op
+  CityUnclaimAdmin:
+    description: Allows admin to unclaim chunks.
+    usage: /CityUnclaimAdmin [City Name]
+    permission: op
+  PlotShrinkCity:
+    description: Removes the corner set you are standing in from a plot.
+    usage: /PlotShrinkCity
+    aliases: [plotshrink]
