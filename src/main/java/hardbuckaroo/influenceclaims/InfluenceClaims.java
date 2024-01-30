@@ -580,7 +580,7 @@ public class InfluenceClaims extends JavaPlugin {
                 player.setScoreboard(board);
             } else {
                 player.setPlayerListName(player.getName());
-                InfluenceClaims.getChat().setPlayerPrefix(player,"");
+                InfluenceClaims.getChat().setPlayerPrefix(null,player,null);
             }
         }
     }

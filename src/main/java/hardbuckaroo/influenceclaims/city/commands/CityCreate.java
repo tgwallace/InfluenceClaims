@@ -62,8 +62,7 @@ public class CityCreate implements CommandExecutor {
         playerData.set(player.getUniqueId().toString()+".City",cityUUID.toString());
         plugin.savePlayerData();
 
-        player.setPlayerListName(plugin.color(color + "[" + cityTag + "]&f") + player.getName());
-        InfluenceClaims.getChat().setPlayerPrefix(player,plugin.color(color + "[" + cityTag + "]&f"));
+        plugin.updateScoreboard();
 
         player.sendRawMessage("You are now the leader of a new city called " + name + "!");
 

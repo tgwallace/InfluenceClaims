@@ -36,6 +36,8 @@ public class LoginListener implements Listener {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         playerData.set(playerUUID+".LastLogin", LocalDate.now().format(formatter));
 
+        plugin.updateScoreboard();
+
         if(!playerData.contains(playerUUID+".ChatChannel")) {
             playerData.set(playerUUID + ".ChatChannel", "World");
         }
@@ -52,8 +54,6 @@ public class LoginListener implements Listener {
         if(playerData.contains(playerUUID+".City")) {
             String cityUUID = playerData.getString(playerUUID + ".City");
             String cityName = cityData.getString(cityUUID + ".Name");
-
-            plugin.updateScoreboard();
 
             if (cityData.contains(cityUUID + ".Elections")) {
                 List<String> cityElectorate = new ArrayList<>();

@@ -47,15 +47,6 @@ public class CitySet implements CommandExecutor {
             if(strings.length > 1 && Arrays.asList("&1","&2","&3","&4","&5","&6","&7","&8","&9","&a","&b","&c","&d","&e","&f").contains(strings[1])){
                 cityData.set(cityUUID+".Color",strings[1]);
                 sender.sendRawMessage(plugin.color(strings[1])+"City color has been successfully set!");
-
-                String tag = cityData.getString(cityUUID+".Tag");
-                for(String UUIDs : cityData.getStringList(cityUUID+".Players")) {
-                    Player citizen = Bukkit.getServer().getPlayer(UUID.fromString(UUIDs));
-                    if(citizen != null) {
-                        citizen.setPlayerListName(plugin.color(strings[1] + "[" + tag + "]&f") + citizen.getName());
-                        InfluenceClaims.getChat().setPlayerPrefix(citizen, plugin.color(strings[1] + "[" + tag + "]&f"));
-                    }
-                }
             }
             else{
                 sender.sendRawMessage("Input must be a two-character chat color code starting with & and ending with 1-9 or a-f.");
@@ -188,7 +179,6 @@ public class CitySet implements CommandExecutor {
                 String tag = strings[1];
                 cityData.set(cityUUID+".Tag", tag);
                 sender.sendRawMessage("City tag has been changed to "+tag+"!");
-                plugin.updateScoreboard();
             } else {
                 sender.sendRawMessage("City tag must be 10 characters or less with no spaces!");
             }
@@ -196,6 +186,7 @@ public class CitySet implements CommandExecutor {
             sender.sendRawMessage("Invalid input. Options are: Name, Leader, Color, Motto, Stance, LeaderTitle, NobilityTitle, CitizenTitle, Government, Home, Tag");
         }
 
+        plugin.updateScoreboard();
         plugin.saveCityData();
         return true;
     }
