@@ -117,20 +117,23 @@ public class CityRole implements CommandExecutor {
                 sender.sendRawMessage("Please provide the title of the role you would like to delete.");
             }
         } else if (strings.length > 0 && strings[0].equalsIgnoreCase("permissions")) {
-            if (strings.length >= 3) {
+            if (strings.length >= 2) {
                 String title = String.join(" ", strings);
-                title = title.substring(title.indexOf(" ") + 1);
-                title = title.substring(title.indexOf(" ") + 1);
 
-                if (cityData.contains(cityUUID + ".Roles." + title + ".Permissions." + strings[1])) {
-                    if (cityData.getBoolean(cityUUID + ".Roles." + title + ".Permissions." + strings[1])) {
-                        cityData.set(cityUUID + ".Roles." + title + ".Permissions." + strings[1], false);
-                    } else {
-                        cityData.set(cityUUID + ".Roles." + title + ".Permissions." + strings[1], true);
+                if(strings.length >=3) {
+                    title = title.substring(title.indexOf(" ") + 1);
+                    title = title.substring(title.indexOf(" ") + 1);
+
+                    if (cityData.contains(cityUUID + ".Roles." + title + ".Permissions." + strings[1])) {
+                        if (cityData.getBoolean(cityUUID + ".Roles." + title + ".Permissions." + strings[1])) {
+                            cityData.set(cityUUID + ".Roles." + title + ".Permissions." + strings[1], false);
+                        } else {
+                            cityData.set(cityUUID + ".Roles." + title + ".Permissions." + strings[1], true);
+                        }
+                        sender.sendRawMessage(title + " permission " + strings[1] + " is now " + cityData.getBoolean(cityUUID + ".Roles." + title + ".Permissions." + strings[1]));
+                        plugin.saveCityData();
+                        return true;
                     }
-                    sender.sendRawMessage(title + " permission " + strings[1] + " is now " + cityData.getBoolean(cityUUID + ".Roles." + title + ".Permissions." + strings[1]));
-                    plugin.saveCityData();
-                    return true;
                 }
 
                 title = String.join(" ", strings);
