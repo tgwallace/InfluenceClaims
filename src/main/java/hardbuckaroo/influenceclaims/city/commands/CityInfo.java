@@ -61,13 +61,13 @@ public class CityInfo implements CommandExecutor, Listener {
         if(cityData.contains(city+".Roles")) {
             for (String role : cityData.getConfigurationSection(city + ".Roles").getKeys(false)) {
                 String roleString = "";
-                for (String rolePlayer : cityData.getStringList(city + ".Roles." + role)) {
+                for (String rolePlayer : cityData.getStringList(city + ".Roles." + role + ".Players")) {
                     roleString = roleString.concat(Bukkit.getOfflinePlayer(UUID.fromString(rolePlayer)).getName() + ", ");
                 }
                 if (roleString.length() > 2) {
                     roleString = roleString.substring(0, roleString.length() - 2);
                 }
-                int roleCount = cityData.getStringList(city + ".Roles." + role).size();
+                int roleCount = cityData.getStringList(city + ".Roles." + role + ".Players").size();
                 message.addExtra("\n" + role + " ("+roleCount+"): " + roleString);
             }
         }
