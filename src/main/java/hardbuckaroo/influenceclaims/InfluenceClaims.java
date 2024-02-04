@@ -35,6 +35,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.*;
+import org.dynmap.DynmapAPI;
+import org.dynmap.markers.MarkerSet;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,6 +58,8 @@ public class InfluenceClaims extends JavaPlugin {
     private static Economy econ = null;
     private static Permission perms = null;
     private static Chat chat = null;
+    public static DynmapAPI dapi = null;
+    public static MarkerSet markerset = null;
 
     @Override
     public void onEnable() {
@@ -252,6 +256,13 @@ public class InfluenceClaims extends JavaPlugin {
             cityStartScheduledElections.startElections();
             nationStartScheduledElections.startElections();
         }, 0, electionResolveTimer);
+
+        if(Bukkit.getPluginManager().getPlugin("DynMap") != null && getConfig().getBoolean("DynMap")) {
+            dapi = (DynmapAPI) Bukkit.getServer().getPluginManager().getPlugin("dynmap");
+            UpdateDynMap updateDynMap = new UpdateDynMap(this);
+            long dynTimer = this.getConfig().getLong("DynMapFrequency") * 72000;
+            Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(this, updateDynMap::updateDynMap, 30, dynTimer);
+        }
     }
     @Override
     public void onDisable() {

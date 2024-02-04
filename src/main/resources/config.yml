@@ -42,6 +42,11 @@ ChunkBoostEnabled: true
 ChunkBoostPermanentRate: 1
 ChunkBoostTemporaryRate: 1
 
+# Determines whether DynMap support is enabled.
+DynMap: true
+# Real life hours between DynMap updates.
+DynMapFrequency: 1
+
 # KillValue is the amount of temporary influence transferred when a player kills another player in one of their territories.
 KillValue: 200
 
