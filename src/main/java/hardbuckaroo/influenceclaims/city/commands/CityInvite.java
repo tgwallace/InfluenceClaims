@@ -34,7 +34,7 @@ public class CityInvite implements CommandExecutor {
         boolean perms = false;
         if(cityData.contains(cityUUID+".Roles")) {
             for (String title : cityData.getConfigurationSection(cityUUID + ".Roles").getKeys(false)) {
-                if (cityData.getStringList(cityUUID + ".Roles.Players").contains(senderUUID)) {
+                if (cityData.getStringList(cityUUID + ".Roles."+title+".Players").contains(senderUUID)) {
                     perms = cityData.getBoolean(cityUUID + ".Roles." + title + ".Permissions.Invite");
                 }
                 if(perms) break;
@@ -62,7 +62,7 @@ public class CityInvite implements CommandExecutor {
                 //Checks whether player is online to receive a message.
                 if(messageRecipient != null) {
                     TextComponent component = new TextComponent(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "You have been invited to join &l" + cityData.getString(cityUUID + ".Name") + "&r. Click here to accept.")));
-                    component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/cityaccept " + cityData.getString(cityUUID + ".Name")));
+                    component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/cityaccept " + cityUUID));
                     messageRecipient.spigot().sendMessage(component);
                 } else {
                     //Adds invitation to their messages in playerData.yml.

@@ -3,6 +3,7 @@ version: '1.0'
 main: hardbuckaroo.influenceclaims.InfluenceClaims
 api-version: '1.20'
 depend: [CoreProtect]
+softdepend: [DynMap]
 commands:
   CityCreate:
     description: Used to create a new city.

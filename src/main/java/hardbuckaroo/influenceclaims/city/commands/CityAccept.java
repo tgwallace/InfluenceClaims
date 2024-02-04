@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class CityAccept implements CommandExecutor {
     private final InfluenceClaims plugin;
@@ -44,6 +45,12 @@ public class CityAccept implements CommandExecutor {
             //Should only get to this branch if player clicks invite to execute command sent from above branch.
             String invite = strings[0];
             Set<String> inviteList = playerData.getConfigurationSection(playerID+".Invites").getKeys(false);
+
+            try{
+                UUID uuid = UUID.fromString(invite);
+            } catch (IllegalArgumentException exception){
+                invite = plugin.getCityUUIDFromName(invite);
+            }
 
             if(!inviteList.contains(invite)) {
                 player.sendRawMessage("You do not have an invite from that city.");

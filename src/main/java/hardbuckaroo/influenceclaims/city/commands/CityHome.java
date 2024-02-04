@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.List;
 import java.util.Objects;
@@ -44,7 +45,7 @@ public class CityHome implements CommandExecutor, Listener {
         player.sendRawMessage("Teleporting in 5 seconds, don't move!");
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             if(player.getLocation().getBlock().equals(playerLocation)) {
-                player.teleport(Objects.requireNonNull(tpLocation));
+                player.teleport(Objects.requireNonNull(tpLocation), PlayerTeleportEvent.TeleportCause.COMMAND);
             } else {
                 player.sendRawMessage("You moved! Teleport cancelled.");
             }
