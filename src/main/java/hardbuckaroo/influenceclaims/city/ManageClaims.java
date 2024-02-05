@@ -22,7 +22,7 @@ public class ManageClaims {
         String worldName = chunkKey.split(",")[0];
         World world = Bukkit.getServer().getWorld(worldName);
 
-        if((world.getEnvironment() == World.Environment.NETHER && !plugin.getConfig().getBoolean("NetherClaims")) || (world.getEnvironment() == World.Environment.THE_END && !plugin.getConfig().getBoolean("EndClaims"))) return;
+        if((world.getEnvironment().equals(World.Environment.NETHER) && !plugin.getConfig().getBoolean("NetherClaims")) || (world.getEnvironment().equals(World.Environment.THE_END) && !plugin.getConfig().getBoolean("EndClaims"))) return;
 
         FileConfiguration claimData = plugin.getClaimData();
         FileConfiguration cityData = plugin.getCityData();
@@ -60,7 +60,7 @@ public class ManageClaims {
         String worldName = chunkKey.split(",")[0];
         World world = Bukkit.getServer().getWorld(worldName);
 
-        if((world.getEnvironment() == World.Environment.NETHER && !plugin.getConfig().getBoolean("NetherClaims")) || (world.getEnvironment() == World.Environment.THE_END && !plugin.getConfig().getBoolean("EndClaims"))) return;
+        if((world.getEnvironment().equals(World.Environment.NETHER) && !plugin.getConfig().getBoolean("NetherClaims")) || (world.getEnvironment().equals(World.Environment.THE_END) && !plugin.getConfig().getBoolean("EndClaims"))) return;
 
         FileConfiguration claimData = plugin.getClaimData();
         FileConfiguration cityData = plugin.getCityData();
@@ -93,11 +93,6 @@ public class ManageClaims {
     }
 
     public void subtractTempClaim(String chunkKey, String cityUUID, int amount) {
-        String worldName = chunkKey.split(",")[0];
-        World world = Bukkit.getServer().getWorld(worldName);
-
-        if((world.getEnvironment() == World.Environment.NETHER && !plugin.getConfig().getBoolean("NetherClaims")) || (world.getEnvironment() == World.Environment.THE_END && !plugin.getConfig().getBoolean("EndClaims"))) return;
-
         FileConfiguration claimData = plugin.getClaimData();
 
         if (!claimData.contains(chunkKey + ".Claims." + cityUUID)) {
@@ -141,9 +136,6 @@ public class ManageClaims {
 
     public void subtractPermClaim(String chunkKey, String cityUUID, int amount) {
         String worldName = chunkKey.split(",")[0];
-        World world = Bukkit.getServer().getWorld(worldName);
-
-        if((world.getEnvironment() == World.Environment.NETHER && !plugin.getConfig().getBoolean("NetherClaims")) || (world.getEnvironment() == World.Environment.THE_END && !plugin.getConfig().getBoolean("EndClaims"))) return;
 
         FileConfiguration claimData = plugin.getClaimData();
 

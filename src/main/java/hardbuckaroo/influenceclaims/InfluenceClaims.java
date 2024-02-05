@@ -257,7 +257,7 @@ public class InfluenceClaims extends JavaPlugin {
             nationStartScheduledElections.startElections();
         }, 0, electionResolveTimer);
 
-        if(Bukkit.getPluginManager().getPlugin("DynMap") != null && getConfig().getBoolean("DynMap")) {
+        if(Bukkit.getPluginManager().getPlugin("DynMap") != null && Bukkit.getServer().getPluginManager().getPlugin("dynmap").isEnabled() && getConfig().getBoolean("DynMap")) {
             dapi = (DynmapAPI) Bukkit.getServer().getPluginManager().getPlugin("dynmap");
             UpdateDynMap updateDynMap = new UpdateDynMap(this);
             long dynTimer = this.getConfig().getLong("DynMapFrequency") * 72000;
@@ -313,7 +313,8 @@ public class InfluenceClaims extends JavaPlugin {
 
     private boolean setupChat() {
         RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
-        chat = Objects.requireNonNull(rsp).getProvider();
+        if(rsp != null)
+            chat = rsp.getProvider();
         return chat != null;
     }
 

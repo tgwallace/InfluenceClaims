@@ -9,10 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockExplodeEvent;
-import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
@@ -114,6 +111,15 @@ public class MiscListeners implements Listener {
     }
 
     @EventHandler
+    public void fireSpreadEventEvent(BlockSpreadEvent event) {
+        if(event.getSource().getType() != Material.FIRE) return;
+        String claimant = plugin.getClaimant(plugin.getChunkKey(event.getBlock().getChunk()));
+        if(claimant != null){
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
     public void entitySpawnEvent(EntitySpawnEvent event) {
         if (event.getEntity() instanceof ArmorStand || event.getEntity() instanceof ItemFrame || event.getEntity() instanceof GlowItemFrame) {
             double distance = 10;
@@ -160,6 +166,7 @@ public class MiscListeners implements Listener {
             }
         }
     }
+
 
     @EventHandler
     public void onBlockExplodeEvent(BlockExplodeEvent event) {
