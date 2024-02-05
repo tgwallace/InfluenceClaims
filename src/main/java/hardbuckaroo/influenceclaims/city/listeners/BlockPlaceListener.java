@@ -3,6 +3,7 @@ package hardbuckaroo.influenceclaims.city.listeners;
 import hardbuckaroo.influenceclaims.city.CheckProtection;
 import hardbuckaroo.influenceclaims.InfluenceClaims;
 import hardbuckaroo.influenceclaims.city.ManageClaims;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,12 +15,15 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 
 public class BlockPlaceListener implements Listener {
     private final InfluenceClaims plugin;
     public BlockPlaceListener(InfluenceClaims plugin){
         this.plugin = plugin;
     }
+
+    public HashMap<Player,String> cooldownMap = new HashMap<>();
 
     @EventHandler (priority = EventPriority.HIGHEST)
     public void onBlockPlaceEvent(BlockPlaceEvent event){
@@ -32,9 +36,15 @@ public class BlockPlaceListener implements Listener {
         String chunkKey = plugin.getChunkKey(block.getChunk());
 
         CheckProtection cp = new CheckProtection(plugin);
-
-        if(cp.checkProtection(block, player)){
+        String claimant = plugin.getClaimant(plugin.getChunkKey(block.getChunk()));
+        if(cooldownMap.containsKey(player) && cooldownMap.get(player).equalsIgnoreCase(claimant)) {
             event.setCancelled(true);
+            return;
+        } else if(cp.checkProtection(block, player)){
+            event.setCancelled(true);
+            cooldownMap.put(player,claimant);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> cooldownMap.remove(player),(long) (1/block.getBreakSpeed(player)));
+            player.sendRawMessage("You have been given a " + (1/block.getBreakSpeed(player))/20 + " second cooldown on attempting to place blocks in "+cityData.getString(claimant+".Name")+"!");
             return;
         }
         else if (cityUUID == null) return;
