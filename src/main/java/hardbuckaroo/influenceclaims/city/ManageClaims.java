@@ -4,12 +4,10 @@ import hardbuckaroo.influenceclaims.InfluenceClaims;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-import java.util.UUID;
 
 public class ManageClaims {
     private final InfluenceClaims plugin;
@@ -131,7 +129,11 @@ public class ManageClaims {
                 }
             }
         }
-        plugin.saveClaimData();
+        try {
+            plugin.saveClaimData();
+        } catch (NullPointerException ignored) {
+
+        }
     }
 
     public void subtractPermClaim(String chunkKey, String cityUUID, int amount) {
@@ -153,6 +155,10 @@ public class ManageClaims {
                 }
             }
         }
-        plugin.saveClaimData();
+        try {
+            plugin.saveClaimData();
+        } catch (NullPointerException ignored) {
+
+        }
     }
 }

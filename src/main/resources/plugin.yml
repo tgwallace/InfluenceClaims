@@ -169,3 +169,7 @@ commands:
     description: Removes the corner set you are standing in from a plot.
     usage: /PlotShrinkCity
     aliases: [plotshrink]
+  CityPopulationList:
+    description: List population of a given city.
+    usage: /CityPopulationList [city]
+    aliases: [cpop,pop]

@@ -1,6 +1,7 @@
 package hardbuckaroo.influenceclaims.city.commands;
 import hardbuckaroo.influenceclaims.InfluenceClaims;
 
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
@@ -47,16 +48,22 @@ public class CityInfo implements CommandExecutor, Listener {
 
         //Building CityInfo message box:
         //Opening with solid line in city's color.
-        TextComponent message = new TextComponent(plugin.color(cityData.getString(city + ".Color")+"&m                                                     "));
+        TextComponent topLine = new TextComponent(plugin.color(cityData.getString(city + ".Color")+"&m                                                     "));
+        player.spigot().sendMessage(topLine);
         //Name of city:
-        message.addExtra(plugin.color("\n"+cityData.getString(city + ".Color") + "&l" + cityData.getString(city + ".Name")));
+        TextComponent cityName = new TextComponent(plugin.color(cityData.getString(city + ".Color") + "&l" + cityData.getString(city + ".Name")));
+        player.spigot().sendMessage(cityName);
         //City motto:
-        if(cityData.contains(city+".Motto"))
-            message.addExtra(plugin.color("\n&o"+cityData.getString(city+".Motto")));
+        if(cityData.contains(city+".Motto")) {
+            TextComponent motto = new TextComponent(plugin.color("&o" + cityData.getString(city + ".Motto")));
+            player.spigot().sendMessage(motto);
+        }
         //City government:
-        message.addExtra(plugin.color("\nGovernment: "+ WordUtils.capitalize(cityData.getString(city+".Government")) + " (" + String.format("%.0f%%",100*cityData.getDouble(city+".Legitimacy"))+" Legitimacy)"));
+        TextComponent government = new TextComponent(plugin.color("Government: "+ WordUtils.capitalize(cityData.getString(city+".Government")) + " (" + String.format("%.0f%%",100*cityData.getDouble(city+".Legitimacy"))+" Legitimacy)"));
+        player.spigot().sendMessage(government);
         //City leader and title:
-        message.addExtra("\n"+cityData.getString(city+".LeaderTitle")+": "+ Bukkit.getOfflinePlayer(UUID.fromString(cityData.getString(city+".Leader"))).getName());
+        TextComponent leader = new TextComponent(cityData.getString(city+".LeaderTitle")+": "+ Bukkit.getOfflinePlayer(UUID.fromString(cityData.getString(city+".Leader"))).getName());
+        player.spigot().sendMessage(leader);
         //Building and adding list of roles:
         if(cityData.contains(city+".Roles")) {
             for (String role : cityData.getConfigurationSection(city + ".Roles").getKeys(false)) {
@@ -68,18 +75,15 @@ public class CityInfo implements CommandExecutor, Listener {
                     roleString = roleString.substring(0, roleString.length() - 2);
                 }
                 int roleCount = cityData.getStringList(city + ".Roles." + role + ".Players").size();
-                message.addExtra("\n" + role + " ("+roleCount+"): " + roleString);
+                TextComponent roleMessage = new TextComponent(role + " ("+roleCount+"): " + roleString);
+                player.spigot().sendMessage(roleMessage);
             }
         }
         //Building and adding list of regular citizens:
         List<String> memberList = cityData.getStringList(city+".Players");
-        String memberString = "";
-        for(String member : memberList){
-            memberString = memberString.concat(Bukkit.getOfflinePlayer(UUID.fromString(member)).getName()+", ");
-        }
-        if(memberString.length() > 2)
-            memberString = memberString.substring(0,memberString.length()-2);
-        message.addExtra("\n"+cityData.getString(city+".CitizenTitle")+" ("+memberList.size()+"): "+ memberString);
+        TextComponent citizens = new TextComponent(cityData.getString(city+".CitizenTitle")+" ("+memberList.size()+") "+plugin.color("&oClick for list!"));
+        citizens.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/citypopulationlist "+cityData.getString(city+".Name")));
+        player.spigot().sendMessage(citizens);
         //Building and adding list of friendly/hostile cities
         if(cityData.contains(city+".Stances")) {
             String friendlyString = "";
@@ -94,17 +98,18 @@ public class CityInfo implements CommandExecutor, Listener {
             }
             if(friendlyString.length() > 2) {
                 friendlyString = friendlyString.substring(0,friendlyString.length()-2);
-                message.addExtra("\nFriendly Cities: " + friendlyString);
+                TextComponent friendly = new TextComponent("Friendly Cities: " + friendlyString);
+                player.spigot().sendMessage(friendly);
             }
             if(hostileString.length() > 2) {
                 hostileString = hostileString.substring(0,hostileString.length()-2);
-                message.addExtra("\nHostile Cities: " + hostileString);
+                TextComponent hostile = new TextComponent("Hostile Cities: " + hostileString);
+                player.spigot().sendMessage(hostile);
             }
         }
         //Ending with solid line in city's color.
-        message.addExtra(plugin.color(cityData.getString(city + ".Color")+"\n&m                                                     "));
-        //Sending message to player.
-        player.spigot().sendMessage(message);
+        TextComponent endLine = new TextComponent(plugin.color(cityData.getString(city + ".Color")+"&m                                                     "));
+        player.spigot().sendMessage(endLine);
 
         return true;
     }
