@@ -42,8 +42,15 @@ ChunkBoostEnabled: true
 ChunkBoostPermanentRate: 1
 ChunkBoostTemporaryRate: 1
 
-# Determines whether DynMap support is enabled.
-DynMap: true
+# Determines whether the plugin will protect rails that originate in claimed territory.
+RailProtector: true
+# Max distance plugin will check for rails if RailProtector is enabled. 0 to disable.
+MaxDistance: 0
+
+# Determines whether DynMap cites support is enabled.
+DynMapCities: true
+# Determines whether DynMap rail support is enabled.
+DynMapRails: true
 # Real life hours between DynMap updates.
 DynMapFrequency: 1
 

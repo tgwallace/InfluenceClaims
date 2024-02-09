@@ -225,6 +225,10 @@ public class InfluenceClaims extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ArenaRespawnListener(this), this);
         Bukkit.getPluginManager().registerEvents(new NationChatListener(this), this);
 
+        if(getConfig().getBoolean("RailProtector")) {
+            Bukkit.getPluginManager().registerEvents(new RailBreakListener(this), this);
+        }
+
         //Initializing using dependency injection.
         CheckProtection checkProtection = new CheckProtection(this);
         CheckPlot checkPlot = new CheckPlot(this);
@@ -260,7 +264,7 @@ public class InfluenceClaims extends JavaPlugin {
             nationStartScheduledElections.startElections();
         }, 0, electionResolveTimer);
 
-        if(Bukkit.getPluginManager().getPlugin("DynMap") != null && Bukkit.getServer().getPluginManager().getPlugin("dynmap").isEnabled() && getConfig().getBoolean("DynMap")) {
+        if(Bukkit.getPluginManager().getPlugin("DynMap") != null && Bukkit.getServer().getPluginManager().getPlugin("dynmap").isEnabled() && getConfig().getBoolean("DynMapCities")) {
             dapi = (DynmapAPI) Bukkit.getServer().getPluginManager().getPlugin("dynmap");
             UpdateDynMap updateDynMap = new UpdateDynMap(this);
             long dynTimer = this.getConfig().getLong("DynMapFrequency") * 72000;

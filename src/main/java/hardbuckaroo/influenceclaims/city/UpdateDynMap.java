@@ -3,6 +3,8 @@ package hardbuckaroo.influenceclaims.city;
 import hardbuckaroo.influenceclaims.InfluenceClaims;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.dynmap.DynmapAPI;
 
@@ -20,20 +22,20 @@ public class UpdateDynMap {
         this.plugin = plugin;
     }
 
-    public void updateDynMap(){
+    public void updateDynMap() {
         DynmapAPI dynmap = InfluenceClaims.dapi;
         FileConfiguration claimData = plugin.getClaimData();
         FileConfiguration cityData = plugin.getCityData();
-        plugin.getLogger().log(Level.INFO,"Updating Dynmap.");
+        plugin.getLogger().log(Level.INFO, "Updating Dynmap.");
 
         Set<MarkerSet> allSets = dynmap.getMarkerAPI().getMarkerSets();
-        for(MarkerSet delete : allSets) {
+        for (MarkerSet delete : allSets) {
             delete.deleteMarkerSet();
         }
 
         MarkerSet m = dynmap.getMarkerAPI().createMarkerSet("InfluenceClaims.markerset", "Cities", dynmap.getMarkerAPI().getMarkerIcons(), false);
 
-        for(String chunkKey : claimData.getKeys(false)) {
+        for (String chunkKey : claimData.getKeys(false)) {
             String claimant = plugin.getClaimant(chunkKey);
             if (claimant != null) {
                 String claimantName = cityData.getString(claimant + ".Name");
@@ -51,10 +53,10 @@ public class UpdateDynMap {
 
                 double opacity = (double) (claimData.getInt(chunkKey + ".Claims." + claimant + ".Temporary") + claimData.getInt(chunkKey + ".Claims." + claimant + ".Permanent")) / plugin.getConfig().getInt("ClaimMaximum");
 
-                if(opacity >= 1) claimantName += " - Full Protection";
-                else claimantName += " - " + Math.round(opacity*100) + "% Protection";
+                if (opacity >= 1) claimantName += " - Full Protection";
+                else claimantName += " - " + Math.round(opacity * 100) + "% Protection";
 
-                if(opacity > 0.8) opacity = 0.8;
+                if (opacity > 0.8) opacity = 0.8;
 
                 String claimantColor = cityData.getString(claimant + ".Color");
                 int claimantRGB;
@@ -79,6 +81,29 @@ public class UpdateDynMap {
                 AreaMarker am = m.createAreaMarker(chunkKey, claimantName, true, keyParts[0], x, z, false);
                 am.setFillStyle(opacity, claimantRGB);
                 am.setLineStyle(1, 1, claimantRGB);
+            }
+        }
+
+        if (plugin.getConfig().getBoolean("DynMapRails")) {
+            MarkerSet m1 = dynmap.getMarkerAPI().getMarkerSet("RailProtect.markerset");
+            if (m1 == null) {
+                m1 = dynmap.getMarkerAPI().createMarkerSet("RailProtect.markerset", "Rail Lines", null, false);
+            }
+            plugin.getLogger().log(Level.INFO, "Checking Dynmap for rail removals.");
+            for (AreaMarker am1 : m1.getAreaMarkers()) {
+                String[] coords = am1.getMarkerID().split("\\.");
+                World world = Bukkit.getServer().getWorld(coords[0]);
+                if (world == null) {
+                    am1.deleteMarker();
+                } else {
+                    int x = Integer.parseInt(coords[1]);
+                    int y = Integer.parseInt(coords[2]);
+                    int z = Integer.parseInt(coords[3]);
+                    Block block = world.getBlockAt(x, y, z);
+                    if (!block.getBlockData().getMaterial().toString().contains("RAIL")) {
+                        am1.deleteMarker();
+                    }
+                }
             }
         }
     }
