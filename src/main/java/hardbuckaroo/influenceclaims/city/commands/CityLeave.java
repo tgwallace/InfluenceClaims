@@ -62,6 +62,7 @@ public class CityLeave implements CommandExecutor, Listener {
                 plugin.saveClaimData();
             } else {
                 cityData.set(currentCity + ".Players", remainingPlayers);
+                playerData.set(uuid+".City",null);
                 if (cityData.getString(currentCity + ".Leader").equalsIgnoreCase(uuid)) {
                     List<String> heirList = cityData.getStringList(currentCity + ".Nobles");
                     if (!heirList.isEmpty()) {

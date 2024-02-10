@@ -13,6 +13,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.*;
+import java.util.logging.Level;
 
 public class CityChatListener implements Listener {
     private final InfluenceClaims plugin;
@@ -34,7 +35,11 @@ public class CityChatListener implements Listener {
             List<String> citizens = cityData.getStringList(cityUUID+".Players");
             Set<Player> originalList = event.getRecipients();
             originalList.removeIf(recipient -> !citizens.contains(recipient.getUniqueId().toString()));
-            event.setFormat(plugin.color(cityColor + "["+cityTag+"]")+player.getName()+": "+event.getMessage());
+            for(Player recipient : originalList) {
+                recipient.sendRawMessage(plugin.color(cityColor + "["+cityTag+"]")+player.getName()+": "+event.getMessage());
+            }
+            plugin.getLogger().log(Level.INFO,plugin.color(cityColor + "["+cityTag+"]")+player.getName()+": "+event.getMessage());
+            event.setCancelled(true);
         }
     }
 }
