@@ -57,7 +57,7 @@ public class PlotTransferCity implements CommandExecutor {
         if(!playerData.contains(recipient.getUniqueId().toString())){
             sender.sendRawMessage("Could not locate a player named " + name + ". Players must have logged in to the server at least once before to be added to a plot.");
         } else {
-            cityData.set(plotData[0]+".Plots."+plotData[1]+"Owner", recipient.getUniqueId().toString());
+            cityData.set(plotData[0]+".Plots."+plotData[1]+".Owner", recipient.getUniqueId().toString());
 
             Player messageRecipient = Bukkit.getPlayer(name);
             //Checks whether player is online to receive a message.
