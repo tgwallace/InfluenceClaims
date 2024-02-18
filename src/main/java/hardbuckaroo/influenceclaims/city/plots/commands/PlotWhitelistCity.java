@@ -52,13 +52,13 @@ public class PlotWhitelistCity implements CommandExecutor {
             if(!playerData.contains(recipient.getUniqueId().toString())){
                 sender.sendRawMessage("Could not locate a player named " + name + ". Players must have logged in to the server at least once before to be added to a plot.");
             } else {
-                List<String> whitelist = cityData.getStringList(plotData[0]+".Plots."+plotData[1]+"Whitelist");
+                List<String> whitelist = cityData.getStringList(plotData[0]+".Plots."+plotData[1]+".Whitelist");
                 if(whitelist.contains(recipient.getUniqueId().toString())) {
                     sender.sendRawMessage(name + " is already on the whitelist!");
                     return true;
                 }
                 whitelist.add(recipient.getUniqueId().toString());
-                cityData.set(plotData[0]+".Plots."+plotData[1]+"Whitelist", whitelist);
+                cityData.set(plotData[0]+".Plots."+plotData[1]+".Whitelist", whitelist);
 
 
                 Player messageRecipient = Bukkit.getPlayer(name);
