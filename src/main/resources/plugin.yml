@@ -92,7 +92,7 @@ commands:
   CityChunkBoost:
     description: Allows players to spend money in exchange for influence in the chunk they're standing in.
     usage: /CityChunkBoost [value]
-    aliases: [cchunkboost]
+    aliases: [cchunkboost,chunkboost,boost]
   NationCreate:
     description: Allows city leaders to create a nation.
     usage: /NationCreate [name]
@@ -165,10 +165,14 @@ commands:
     description: Allows admin to unclaim chunks.
     usage: /CityUnclaimAdmin [City Name]
     permission: op
-  PlotShrinkCity:
+  CityPlotShrink:
     description: Removes the corner set you are standing in from a plot.
     usage: /PlotShrinkCity
     aliases: [plotshrink]
+  CityPlotDelete:
+    description: Allows the owner to delete a plot.
+    usage: /CityPlotDelete
+    aliases: [plotdelete]
   CityPopulationList:
     description: List population of a given city.
     usage: /CityPopulationList [city]

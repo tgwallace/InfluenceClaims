@@ -61,6 +61,7 @@ public class ApplyPressure {
                 claimData.set(chunkKey+".Claims."+claim+".Pressure",pressure);
                 claimData.set(chunkKey+".Claims."+claim+".InfluenceDecay",influenceDecay);
                 claimData.set(chunkKey+".Claims."+claim+".Hardening",hardening);
+                claimData.set(chunkKey+".Claims."+claim+".OldTotal",oldValuePerm+oldValueTemp);
             }
         }
 

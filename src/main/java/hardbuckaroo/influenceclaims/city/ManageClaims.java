@@ -105,6 +105,9 @@ public class ManageClaims {
                 claimData.set(chunkKey + ".Claims." + cityUUID + ".Temporary", 0);
                 subtractPermClaim(chunkKey,cityUUID,Math.abs(newValueTemp));
             }
+            int oldTotal = claimData.getInt(chunkKey+".Claims."+cityUUID+".OldTotal");
+            int newTotal = newValueTemp + claimData.getInt(chunkKey+".Claims."+cityUUID+".Permanent");
+            claimData.set(chunkKey + ".Claims." + cityUUID + ".NetChange", newTotal-oldTotal);
             if(claimData.contains(chunkKey+".Claims."+cityUUID+".Monitor")) {
                 int claimMax = plugin.getConfig().getInt("ClaimMaximum");
                 int claimMin = plugin.getConfig().getInt("ClaimMinimum");

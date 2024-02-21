@@ -198,7 +198,10 @@ public class InfluenceClaims extends JavaPlugin {
         Objects.requireNonNull(getCommand("cityunclaimadmin")).setExecutor(cityUnclaimAdmin);
         //Removes a set of corners from a plot.
         PlotShrinkCity plotShrinkCity = new PlotShrinkCity(this);
-        Objects.requireNonNull(getCommand("plotshrinkcity")).setExecutor(plotShrinkCity);
+        Objects.requireNonNull(getCommand("cityplotshrink")).setExecutor(plotShrinkCity);
+        //Removes a set of corners from a plot.
+        PlotDeleteCity plotDeleteCity = new PlotDeleteCity(this);
+        Objects.requireNonNull(getCommand("cityplotdelete")).setExecutor(plotDeleteCity);
         //Lists all citizens of a city.
         PopulationList populationList = new PopulationList(this);
         Objects.requireNonNull(getCommand("citypopulationlist")).setExecutor(populationList);
