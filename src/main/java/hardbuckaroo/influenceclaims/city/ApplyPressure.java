@@ -23,6 +23,7 @@ public class ApplyPressure {
 
     public void applyPressure(){
         FileConfiguration claimData = plugin.getClaimData();
+        FileConfiguration cityData = plugin.getCityData();
         int decayConstant = plugin.getConfig().getInt("DecayConstant");
 
         Set<String> keys = claimData.getKeys(false);
@@ -95,9 +96,16 @@ public class ApplyPressure {
         for(String chunkKey : keys) {
             if(claimData.getConfigurationSection(chunkKey+".Claims").getKeys(false).isEmpty()) {
                 claimData.set(chunkKey,null);
+            } else {
+                for(String cityUUID : claimData.getConfigurationSection(chunkKey+".Claims").getKeys(false)) {
+                    long chunkInfluence = claimData.getLong(chunkKey+".Claims."+cityUUID+".Temporary") + claimData.getLong(chunkKey+".Claims."+cityUUID+".Permanent");
+                    long totalInfluence = cityData.getLong(cityUUID+".TotalInfluence") + chunkInfluence;
+                    cityData.set(cityUUID+".TotalInfluence",totalInfluence);
+                }
             }
         }
 
+        plugin.saveCityData();
         plugin.saveClaimData();
     }
 }

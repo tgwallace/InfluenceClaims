@@ -58,6 +58,9 @@ public class CityInfo implements CommandExecutor, Listener {
             TextComponent motto = new TextComponent(plugin.color("&o" + cityData.getString(city + ".Motto")));
             player.spigot().sendMessage(motto);
         }
+        //Total Influence:
+        TextComponent influence = new TextComponent("Total Influence: " + cityData.getLong(city+".TotalInfluence"));
+        player.spigot().sendMessage(influence);
         //City government:
         TextComponent government = new TextComponent(plugin.color("Government: "+ WordUtils.capitalize(cityData.getString(city+".Government")) + " (" + String.format("%.0f%%",100*cityData.getDouble(city+".Legitimacy"))+" Legitimacy)"));
         player.spigot().sendMessage(government);

@@ -22,26 +22,41 @@ public class CityList implements CommandExecutor {
         Player player = (Player) commandSender;
         FileConfiguration cityData = plugin.getCityData();
         FileConfiguration playerData = plugin.getPlayerData();
+        int page;
+
+        if(strings.length == 0) page = 0;
+        else if(strings[0].matches("\\d+")) page = Integer.parseInt(strings[0]);
+        else {
+            player.sendRawMessage("Invalid input. Use /CityList [page #] or just /CityList.");
+            return true;
+        }
 
         if(cityData.getKeys(false).isEmpty()){
             player.sendRawMessage("There are no cities here yet. Wait a little while or start your own city using /CityCreate!");
         } else {
             TextComponent message = new TextComponent(plugin.color("&lClick a city to see its info tab:"));
 
-            Map<String, Integer> map = new LinkedHashMap<String, Integer>();
-            Map<String, Integer> mapSorted = new LinkedHashMap<String, Integer>();
+            Map<String, Long> map = new LinkedHashMap<>();
+            Map<String, Long> mapSorted = new LinkedHashMap<>();
             for(String cityUUID : cityData.getKeys(false)) {
-                    map.put(cityUUID, cityData.getStringList(cityUUID+".Players").size());
+                    map.put(cityUUID, cityData.getLong(cityUUID+".TotalInfluence"));
             }
-            map.entrySet().stream().sorted(Map.Entry.<String, Integer>comparingByValue().reversed()).forEachOrdered(x -> mapSorted.put(x.getKey(), x.getValue()));
+            map.entrySet().stream().sorted(Map.Entry.<String,Long>comparingByValue().reversed()).forEachOrdered(x -> mapSorted.put(x.getKey(), x.getValue()));
 
-            for(Map.Entry<String, Integer> entry : mapSorted.entrySet()) {
-                String cityUUID = entry.getKey();
-                int pop = entry.getValue();
-                TextComponent subComponent = new TextComponent(plugin.color("\n&l"+cityData.getString(cityUUID+".Color")+cityData.getString(cityUUID+".Name")+" &r("+pop+"): &o" + cityData.getString(cityUUID+".Motto")));
-                subComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/cityinfo "+cityData.getString(cityUUID+".Name")));
-                message.addExtra(subComponent);
+            int count = 0;
+            for(Map.Entry<String, Long> entry : mapSorted.entrySet()) {
+                if(count>=page*5 && count<(page+1)*5) {
+                    String cityUUID = entry.getKey();
+                    long influence = entry.getValue();
+                    TextComponent subComponent = new TextComponent(plugin.color("\n&l" + cityData.getString(cityUUID + ".Color") + cityData.getString(cityUUID + ".Name") + " &r(" + influence + "): &o" + cityData.getString(cityUUID + ".Motto")));
+                    subComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/cityinfo " + cityData.getString(cityUUID + ".Name")));
+                    message.addExtra(subComponent);
+                }
+                count++;
             }
+            TextComponent nextLine = new TextComponent(plugin.color("\n&oNext Page &r->"));
+            nextLine.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/citylist " + (page+1)));
+            message.addExtra(nextLine);
             player.spigot().sendMessage(message);
         }
         return true;

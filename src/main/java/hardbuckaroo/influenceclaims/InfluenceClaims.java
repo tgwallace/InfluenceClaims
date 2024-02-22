@@ -69,7 +69,7 @@ public class InfluenceClaims extends JavaPlugin {
 
         if (getConfig().getBoolean("ChunkBoostEnabled") && !setupEconomy()) {
             this.getConfig().set("ChunkBoostEnabled",false);
-            this.saveDefaultConfig();
+            this.saveConfig();
             getLogger().warning(String.format("[%s] - ChunkBoost disabled due to no Vault dependency found!", getDescription().getName()));
         }
         setupPermissions();
