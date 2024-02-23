@@ -168,11 +168,11 @@ commands:
   CityPlotShrink:
     description: Removes the corner set you are standing in from a plot.
     usage: /PlotShrinkCity
-    aliases: [plotshrink]
+    aliases: [plotshrink,cplotshrink]
   CityPlotDelete:
     description: Allows the owner to delete a plot.
     usage: /CityPlotDelete
-    aliases: [plotdelete]
+    aliases: [plotdelete,cplotdelete]
   CityPopulationList:
     description: List population of a given city.
     usage: /CityPopulationList [city]

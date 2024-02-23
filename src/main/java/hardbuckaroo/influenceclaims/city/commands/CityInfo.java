@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,7 +60,7 @@ public class CityInfo implements CommandExecutor, Listener {
             player.spigot().sendMessage(motto);
         }
         //Total Influence:
-        TextComponent influence = new TextComponent("Total Influence: " + cityData.getLong(city+".TotalInfluence"));
+        TextComponent influence = new TextComponent("Total Influence: " + NumberFormat.getInstance().format(cityData.getLong(city+".TotalInfluence")));
         player.spigot().sendMessage(influence);
         //City government:
         TextComponent government = new TextComponent(plugin.color("Government: "+ WordUtils.capitalize(cityData.getString(city+".Government")) + " (" + String.format("%.0f%%",100*cityData.getDouble(city+".Legitimacy"))+" Legitimacy)"));

@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.text.NumberFormat;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -44,19 +45,23 @@ public class CityList implements CommandExecutor {
             map.entrySet().stream().sorted(Map.Entry.<String,Long>comparingByValue().reversed()).forEachOrdered(x -> mapSorted.put(x.getKey(), x.getValue()));
 
             int count = 0;
+            boolean lastPage = false;
             for(Map.Entry<String, Long> entry : mapSorted.entrySet()) {
                 if(count>=page*5 && count<(page+1)*5) {
                     String cityUUID = entry.getKey();
                     long influence = entry.getValue();
-                    TextComponent subComponent = new TextComponent(plugin.color("\n&l" + cityData.getString(cityUUID + ".Color") + cityData.getString(cityUUID + ".Name") + " &r(" + influence + "): &o" + cityData.getString(cityUUID + ".Motto")));
+                    TextComponent subComponent = new TextComponent(plugin.color("\n&l" + cityData.getString(cityUUID + ".Color") + cityData.getString(cityUUID + ".Name") + " &r(" + NumberFormat.getInstance().format(influence) + "): &o" + cityData.getString(cityUUID + ".Motto")));
                     subComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/cityinfo " + cityData.getString(cityUUID + ".Name")));
                     message.addExtra(subComponent);
+                    lastPage = count % 5 != 0;
                 }
                 count++;
             }
-            TextComponent nextLine = new TextComponent(plugin.color("\n&oNext Page &r->"));
-            nextLine.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/citylist " + (page+1)));
-            message.addExtra(nextLine);
+            if(!lastPage) {
+                TextComponent nextLine = new TextComponent(plugin.color("\n&oNext Page &r->"));
+                nextLine.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/citylist " + (page + 1)));
+                message.addExtra(nextLine);
+            }
             player.spigot().sendMessage(message);
         }
         return true;

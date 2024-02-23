@@ -52,7 +52,7 @@ public class BlockPlaceListener implements Listener {
         String[] plot = plugin.getPlot(block);
         if(plot != null && !plot[0].equalsIgnoreCase(cityUUID)
                 && (cityData.getStringList(plot[0]+".Plots."+plot[1]+".Whitelist").contains(player.getUniqueId().toString()) || cityData.getString(plot[0]+".Plots."+plot[1]+".Owner").equalsIgnoreCase(player.getUniqueId().toString()))
-                && !(cityData.contains(cityUUID+".Nation") && cityData.getString(cityUUID+".Nation").equalsIgnoreCase(cityData.getString(plot[0]+".Nation")))) {
+                && !(cityData.contains(cityUUID+".Nation") && (cityData.contains(cityUUID+".Nation") && cityData.getString(cityUUID+".Nation").equalsIgnoreCase(cityData.getString(plot[0]+".Nation"))))) {
             return;
         }
 
