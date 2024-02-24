@@ -51,7 +51,7 @@ public class PlayerDeathListener implements Listener {
 
             int killValue = plugin.getConfig().getInt("KillValue");
 
-            if (Objects.requireNonNull(claimant).equalsIgnoreCase(attackerCityUUID) || claimant.equalsIgnoreCase(defenderCityUUID)) {
+            if (claimant != null && (claimant.equalsIgnoreCase(attackerCityUUID) || claimant.equalsIgnoreCase(defenderCityUUID))) {
                 ManageClaims manageClaims = new ManageClaims(plugin);
                 manageClaims.addTempClaim(chunkKey, attackerCityUUID, killValue);
                 manageClaims.subtractTempClaim(chunkKey, defenderCityUUID, killValue);
