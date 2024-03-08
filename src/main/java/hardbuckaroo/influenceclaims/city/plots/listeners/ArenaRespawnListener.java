@@ -34,9 +34,7 @@ public class ArenaRespawnListener implements Listener {
             while(true) {
                 location1 = location1.getBlock().getRelative(1,0,0).getLocation();
                 plot = plugin.getPlot(location1.getBlock());
-
                 if(plot == null) break;
-
                 plotType = cityData.getString(plot[0] + ".Plots." + plot[1]+".Type");
                 if(!plotType.equalsIgnoreCase("arena")) {
                     break;
@@ -44,6 +42,7 @@ public class ArenaRespawnListener implements Listener {
 
                 location2 = location2.getBlock().getRelative(-1,0,0).getLocation();
                 plot = plugin.getPlot(location2.getBlock());
+                if(plot == null) break;
                 plotType = cityData.getString(plot[0] + ".Plots." + plot[1]+".Type");
                 if(plotType == null || !plotType.equalsIgnoreCase("arena")) {
                     break;
@@ -51,6 +50,7 @@ public class ArenaRespawnListener implements Listener {
 
                 location3 = location3.getBlock().getRelative(0,0,1).getLocation();
                 plot = plugin.getPlot(location3.getBlock());
+                if(plot == null) break;
                 plotType = cityData.getString(plot[0] + ".Plots." + plot[1]+".Type");
                 if(plotType == null || !plotType.equalsIgnoreCase("arena")) {
                     break;
@@ -58,6 +58,7 @@ public class ArenaRespawnListener implements Listener {
 
                 location4 = location4.getBlock().getRelative(0,0,-1).getLocation();
                 plot = plugin.getPlot(location4.getBlock());
+                if(plot == null) break;
                 plotType = cityData.getString(plot[0] + ".Plots." + plot[1]+".Type");
                 if(plotType == null || !plotType.equalsIgnoreCase("arena")) {
                     break;
