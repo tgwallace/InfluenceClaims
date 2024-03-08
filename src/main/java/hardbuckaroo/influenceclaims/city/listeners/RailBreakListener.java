@@ -30,7 +30,7 @@ public class RailBreakListener implements Listener {
         this.plugin = plugin;
     }
 
-    public ArrayList<Block> checkingBlocks = new ArrayList<>();
+    public HashMap<String,String> blockCache = new HashMap<>();
 
     @EventHandler (ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onBlockBreakEvent(BlockBreakEvent event){
@@ -43,7 +43,6 @@ public class RailBreakListener implements Listener {
                 || traceRail(originalRail.getRelative(0,-1,0),event.getPlayer())
         ) {
             event.setCancelled(true);
-            event.getPlayer().sendRawMessage("That rail is protected by RailProtector.");
         }
     }
 
@@ -95,7 +94,6 @@ public class RailBreakListener implements Listener {
                 || traceRail(originalRail.getRelative(0,-1,0),event.getPlayer())
         ) {
             event.setCancelled(true);
-            event.getPlayer().sendRawMessage("That rail is protected by RailProtector.");
         }
     }
 
@@ -125,7 +123,6 @@ public class RailBreakListener implements Listener {
                 || traceRail(originalRail.getRelative(0,-1,0),event.getPlayer())
         ) {
             event.setCancelled(true);
-            event.getPlayer().sendRawMessage("That rail is protected by RailProtector.");
         } else if(originalRail.getBlockData().getMaterial().toString().contains("RAIL") && Bukkit.getPluginManager().getPlugin("dynmap") != null && Bukkit.getServer().getPluginManager().getPlugin("dynmap").isEnabled() && plugin.getConfig().getBoolean("DynMapRails")) {
             DynmapAPI dynmap = InfluenceClaims.dapi;
             MarkerSet m = dynmap.getMarkerAPI().getMarkerSet("RailProtect.markerset");
@@ -270,6 +267,12 @@ public class RailBreakListener implements Listener {
                 }
             }
             while (frontRail.getBlockData().getMaterial().toString().contains("RAIL") && !frontRail.equals(originalRail) && (maxDistance == 0 || currentDistance < maxDistance)) {
+                if(blockCache.containsKey(frontRail.toString()) && blockCache.get(frontRail.toString()).equalsIgnoreCase(player.getUniqueId().toString())) {
+                    blockCache.put(originalRail.toString(),player.getUniqueId().toString());
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> blockCache.remove(originalRail.toString()),72000);
+                    return false;
+                }
+
                 currentDistance++;
                 shape = ((Rail) frontRail.getState().getBlockData()).getShape();
                 if (shape.toString().equals("ASCENDING_EAST")) {
@@ -454,37 +457,40 @@ public class RailBreakListener implements Listener {
                 return false;
             }
 
-            List<Player> playerList = originalRail.getWorld().getPlayers();
-            if(playerList.isEmpty()) return true;
-            CraftPlayer p = (CraftPlayer) playerList.get(0);
-            ServerPlayer sp = p.getHandle();
-            MinecraftServer server = sp.getServer();
-            ServerLevel level = sp.serverLevel();
-            GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "FakePlayer");
-            ServerPlayer fakeSP = new ServerPlayer(server, level, gameProfile, ClientInformation.createDefault());
-            Player fakePlayer = fakeSP.getBukkitEntity().getPlayer();
             CheckProtection cp = new CheckProtection(plugin);
             if (cp.checkProtection(frontRail,player)) {
                 if (x == 1) isProt1 = true;
                 if (x == 2) isProt2 = true;
             }
 
-            if (cp.checkProtection(frontRail,fakePlayer)) {
+            if (cp.checkProtection(frontRail)) {
                 if (x == 1) isWild1 = false;
                 if (x == 2) isWild2 = false;
             }
         }
 
-        if(isProt1 && isProt2) return true;
+        if(isProt1 && isProt2) {
+            return true;
+        }
         else if(isProt1 && !isWild1 && !isProt2 && !isWild2) {
+            blockCache.put(originalRail.toString(),player.getUniqueId().toString());
+            Bukkit.getScheduler().runTaskLater(plugin, () -> blockCache.remove(originalRail.toString()),72000);
             return false;
         }
         else if(isProt2 && !isWild2 && !isProt1 && !isWild1) {
+            blockCache.put(originalRail.toString(),player.getUniqueId().toString());
+            Bukkit.getScheduler().runTaskLater(plugin, () -> blockCache.remove(originalRail.toString()),72000);
             return false;
         }
-        else if (isProt1 && isWild2) return true;
-        else if (isProt2 && isWild1) return true;
+        else if (isProt1 && isWild2) {
+            return true;
+        }
+        else if (isProt2 && isWild1) {
+            return true;
+        }
         else {
+            blockCache.put(originalRail.toString(),player.getUniqueId().toString());
+            Bukkit.getScheduler().runTaskLater(plugin, () -> blockCache.remove(originalRail.toString()),72000);
             return false;
         }
     }

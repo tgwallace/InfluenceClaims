@@ -34,8 +34,11 @@ public class ArenaRespawnListener implements Listener {
             while(true) {
                 location1 = location1.getBlock().getRelative(1,0,0).getLocation();
                 plot = plugin.getPlot(location1.getBlock());
+
+                if(plot == null) break;
+
                 plotType = cityData.getString(plot[0] + ".Plots." + plot[1]+".Type");
-                if(plotType == null || !plotType.equalsIgnoreCase("arena")) {
+                if(!plotType.equalsIgnoreCase("arena")) {
                     break;
                 }
 

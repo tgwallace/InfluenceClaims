@@ -20,8 +20,8 @@ public class CityUnclaimAdmin implements CommandExecutor {
         FileConfiguration claimData = plugin.getClaimData();
         Player sender = (Player) commandSender;
 
-        if(strings.length < 2) {
-            commandSender.sendMessage("Must provide the amount to boost and the name of the city.");
+        if(strings.length < 1) {
+            commandSender.sendMessage("Must provide the name of the city.");
             return false;
         }
 

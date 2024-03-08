@@ -47,7 +47,7 @@ public class NationAccept implements CommandExecutor {
         }
 
         //Checks if the city has invites to a nation.
-        if(!playerData.contains(cityUUID+".NationInvites")) {
+        if(!cityData.contains(cityUUID+".NationInvites")) {
             player.sendRawMessage("You do not have any nation invites right now. Start your own nation using /NationCreate or ask around for a nation to join!");
             return true;
         } else if (strings.length == 0){
@@ -60,7 +60,7 @@ public class NationAccept implements CommandExecutor {
             player.spigot().sendMessage(component);
 
             //Sends the player a list of clickable invites.
-            for(String invite : Objects.requireNonNull(cityData.getConfigurationSection(cityUUID + ".NationInvites")).getKeys(false)) {
+            for(String invite : cityData.getStringList(cityUUID + ".NationInvites")) {
                 component = new TextComponent(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "You have been invited to join the nation of &l" + nationData.getString(invite + ".Name") + "&r. Click here to accept.")));
                 component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/cityaccept " + invite));
                 player.spigot().sendMessage(component);
@@ -69,7 +69,7 @@ public class NationAccept implements CommandExecutor {
         } else {
             //Should only get to this branch if player clicks invite to execute command sent from above branch.
             String invite = strings[0];
-            Set<String> inviteList = Objects.requireNonNull(cityData.getConfigurationSection(cityUUID + ".NationInvites")).getKeys(false);
+            List<String> inviteList = cityData.getStringList(cityUUID + ".NationInvites");
 
             if(!inviteList.contains(invite)) {
                 player.sendRawMessage("You do not have an invite from that nation.");

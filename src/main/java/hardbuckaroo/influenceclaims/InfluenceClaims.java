@@ -273,6 +273,8 @@ public class InfluenceClaims extends JavaPlugin {
             long dynTimer = this.getConfig().getLong("DynMapFrequency") * 72000;
             Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(this, updateDynMap::updateDynMap, 30, dynTimer);
         }
+
+        Bukkit.getScheduler().runTaskTimer(this, this::saveClaimData,1200,1200);
     }
     @Override
     public void onDisable() {
@@ -282,6 +284,10 @@ public class InfluenceClaims extends JavaPlugin {
             playerData.set(playerUUID+".PlotExpand",null);
             playerData.set(playerUUID+".PlotCorner1",null);
         }
+        saveClaimData();
+        saveCityData();
+        savePlayerData();
+        saveNationData();
         getLogger().info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion()));
     }
 

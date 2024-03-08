@@ -40,15 +40,13 @@ public class BrewListener implements Listener {
         String chunkKey = plugin.getChunkKey(block.getChunk());
 
         int potionMultiplier = 0;
-        if(!event.getResults().get(0).getType().equals(Material.AIR)) potionMultiplier++;
-        if(!event.getResults().get(1).getType().equals(Material.AIR)) potionMultiplier++;
-        if(!event.getResults().get(2).getType().equals(Material.AIR)) potionMultiplier++;
+        if(event.getResults().get(0) != null && !event.getResults().get(0).getType().equals(Material.AIR)) potionMultiplier++;
+        if(event.getResults().get(1) != null && !event.getResults().get(1).getType().equals(Material.AIR)) potionMultiplier++;
+        if(event.getResults().get(2) != null && !event.getResults().get(2).getType().equals(Material.AIR)) potionMultiplier++;
 
         int blockValue = 20*potionMultiplier;
 
         ManageClaims manageClaims = new ManageClaims(plugin);
         manageClaims.addTempClaim(chunkKey,cityUUID,blockValue);
-
-        plugin.saveClaimData();
     }
 }

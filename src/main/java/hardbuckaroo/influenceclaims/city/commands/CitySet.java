@@ -77,7 +77,7 @@ public class CitySet implements CommandExecutor {
                 String addedUUID = Bukkit.getOfflinePlayer(strings[1]).getUniqueId().toString();
                 if(cityData.getStringList(cityUUID+".Players").contains(addedUUID)){
                     cityData.set(cityUUID+".Leader",addedUUID);
-                    plugin.cityMessage(cityUUID,cityData.getString(cityUUID+".Color")+"&l"+strings[1]+" has been made the "+ cityData.getString(cityUUID+".NobilityTitle") + " of " + cityData.getString(cityUUID+".Name") + "!",true);
+                    plugin.cityMessage(cityUUID,cityData.getString(cityUUID+".Color")+"&l"+strings[1]+" has been made the "+ cityData.getString(cityUUID+".LeaderTitle") + " of " + cityData.getString(cityUUID+".Name") + "!",true);
                     manageCityLegitimacy.subtractLegitimacy(cityUUID,0.15);
                 } else {
                     sender.sendRawMessage("Could not locate a player named " + strings[1] + ". Please check your spelling and try again.");
@@ -183,7 +183,7 @@ public class CitySet implements CommandExecutor {
                 sender.sendRawMessage("City tag must be 10 characters or less with no spaces!");
             }
         } else {
-            sender.sendRawMessage("Invalid input. Options are: Name, Leader, Color, Motto, Stance, LeaderTitle, NobilityTitle, CitizenTitle, Government, Home, Tag");
+            sender.sendRawMessage("Invalid input. Options are: Name, Leader, Color, Motto, Stance, LeaderTitle, CitizenTitle, Government, Home, Tag");
         }
 
         plugin.updateScoreboard();

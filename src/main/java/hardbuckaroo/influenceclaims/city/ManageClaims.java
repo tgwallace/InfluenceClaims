@@ -25,7 +25,7 @@ public class ManageClaims {
         FileConfiguration claimData = plugin.getClaimData();
         FileConfiguration cityData = plugin.getCityData();
         String claimant = plugin.getClaimant(chunkKey);
-        String stance = cityData.getString(cityUUID+".Stance."+claimant);
+        String stance = cityData.getString(cityUUID+".Stances."+claimant);
 
         if(claimant != null && !claimant.equalsIgnoreCase(cityUUID)) {
             if (cityData.getString(cityUUID + ".Nation") != null && cityData.getString(claimant + ".Nation") != null && cityData.getString(cityUUID + ".Nation").equalsIgnoreCase(cityData.getString(claimant + ".Nation"))) {
@@ -51,7 +51,6 @@ public class ManageClaims {
         claimData.set(chunkKey + ".Claims." + cityUUID + ".Temporary", newValueTemp);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         claimData.set(chunkKey + ".Claims." + cityUUID + ".LastAdd", LocalDate.now().format(formatter));
-        plugin.saveClaimData();
     }
 
     public void addPermClaim(String chunkKey, String cityUUID, int amount) {
@@ -63,7 +62,7 @@ public class ManageClaims {
         FileConfiguration claimData = plugin.getClaimData();
         FileConfiguration cityData = plugin.getCityData();
         String claimant = plugin.getClaimant(chunkKey);
-        String stance = cityData.getString(cityUUID+".Stance."+claimant);
+        String stance = cityData.getString(cityUUID+".Stances."+claimant);
 
         if(claimant != null && !claimant.equalsIgnoreCase(cityUUID)) {
             if (cityData.contains(cityUUID + ".Nation") && cityData.getString(cityUUID + ".Nation").equalsIgnoreCase(cityData.getString(claimant + ".Nation"))) {
@@ -87,7 +86,6 @@ public class ManageClaims {
         claimData.set(chunkKey + ".Claims." + cityUUID + ".Permanent", newValuePerm);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         claimData.set(chunkKey + ".Claims." + cityUUID + ".LastAdd", LocalDate.now().format(formatter));
-        plugin.saveClaimData();
     }
 
     public void subtractTempClaim(String chunkKey, String cityUUID, int amount) {
@@ -105,9 +103,6 @@ public class ManageClaims {
                 claimData.set(chunkKey + ".Claims." + cityUUID + ".Temporary", 0);
                 subtractPermClaim(chunkKey,cityUUID,Math.abs(newValueTemp));
             }
-            int oldTotal = claimData.getInt(chunkKey+".Claims."+cityUUID+".OldTotal");
-            int newTotal = newValueTemp + claimData.getInt(chunkKey+".Claims."+cityUUID+".Permanent");
-            claimData.set(chunkKey + ".Claims." + cityUUID + ".NetChange", newTotal-oldTotal);
             if(claimData.contains(chunkKey+".Claims."+cityUUID+".Monitor")) {
                 int claimMax = plugin.getConfig().getInt("ClaimMaximum");
                 int claimMin = plugin.getConfig().getInt("ClaimMinimum");
@@ -132,11 +127,6 @@ public class ManageClaims {
                 }
             }
         }
-        try {
-            plugin.saveClaimData();
-        } catch (NullPointerException ignored) {
-
-        }
     }
 
     public void subtractPermClaim(String chunkKey, String cityUUID, int amount) {
@@ -157,11 +147,6 @@ public class ManageClaims {
                     claimData.set(chunkKey,null);
                 }
             }
-        }
-        try {
-            plugin.saveClaimData();
-        } catch (NullPointerException ignored) {
-
         }
     }
 }

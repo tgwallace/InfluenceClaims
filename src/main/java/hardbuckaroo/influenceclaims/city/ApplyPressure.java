@@ -92,6 +92,10 @@ public class ApplyPressure {
             }
         }
 
+        for(String cityUUID : cityData.getKeys(false)) {
+            cityData.set(cityUUID+".TotalInfluence",0);
+        }
+
         keys = claimData.getKeys(false);
         for(String chunkKey : keys) {
             if(claimData.getConfigurationSection(chunkKey+".Claims").getKeys(false).isEmpty()) {
@@ -101,10 +105,12 @@ public class ApplyPressure {
                     long chunkInfluence = claimData.getLong(chunkKey+".Claims."+cityUUID+".Temporary") + claimData.getLong(chunkKey+".Claims."+cityUUID+".Permanent");
                     long totalInfluence = cityData.getLong(cityUUID+".TotalInfluence") + chunkInfluence;
                     cityData.set(cityUUID+".TotalInfluence",totalInfluence);
+
+                    int oldTotal = claimData.getInt(chunkKey+".Claims."+cityUUID+".OldTotal");
+                    claimData.set(chunkKey + ".Claims." + cityUUID + ".NetChange", chunkInfluence-oldTotal);
                 }
             }
         }
-
         plugin.saveCityData();
         plugin.saveClaimData();
     }

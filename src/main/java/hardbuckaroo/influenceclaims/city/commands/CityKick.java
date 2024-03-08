@@ -48,7 +48,7 @@ public class CityKick implements CommandExecutor {
         }
 
         //Check whether player has permission to kick members out of the city:
-        if(!Objects.requireNonNull(cityData.getString(cityUUID + ".Leader")).equalsIgnoreCase(senderUUID) && !nobles.contains(senderUUID)){
+        if(!Objects.requireNonNull(cityData.getString(cityUUID + ".Leader")).equalsIgnoreCase(senderUUID) && !perms){
             sender.sendRawMessage("You do not have permission to kick players out of the city.");
             return true;
         }
@@ -56,9 +56,10 @@ public class CityKick implements CommandExecutor {
         //Run through all names listed to be kicked:
         for(String name : strings) {
             OfflinePlayer recipient = Bukkit.getOfflinePlayer(name);
+            List<String> players = cityData.getStringList(cityUUID+".Players");
             if (recipient.getUniqueId().equals(sender.getUniqueId())){
                 sender.sendRawMessage("You cannot kick yourself from a city. Use /CityLeave to leave instead.");
-            } else if(!cityData.contains(cityUUID + ".Players."+recipient.getUniqueId().toString())){
+            } else if(!players.contains(recipient.getUniqueId().toString())){
                 sender.sendRawMessage("Could not locate a player named " + name + " in " + cityData.getString(cityUUID+".Name") + ".");
             } else {
                 //Make sure other player doesn't have a role:
@@ -72,7 +73,8 @@ public class CityKick implements CommandExecutor {
                 }
 
                 //Remove player in cityData:
-                cityData.set(cityUUID + ".Players."+recipient.getUniqueId().toString(),null);
+                players.remove(recipient.getUniqueId().toString());
+                cityData.set(cityUUID + ".Players",players);
                 plugin.saveCityData();
                 //Remove player in playerData:
                 playerData.set(recipient.getUniqueId().toString()+".City",null);

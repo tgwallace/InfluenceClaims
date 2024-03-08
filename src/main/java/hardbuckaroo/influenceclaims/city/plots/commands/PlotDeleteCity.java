@@ -42,7 +42,7 @@ public class PlotDeleteCity implements CommandExecutor {
         String owner = cityData.getString(plotData[0] + ".Plots." + plotData[1] + ".Owner");
 
         //Checks whether the sender owns this plot.
-        if (!owner.equals(sender.getUniqueId().toString())) {
+        if (!owner.equalsIgnoreCase(sender.getUniqueId().toString())) {
             String ownerName = Bukkit.getOfflinePlayer(UUID.fromString(cityData.getString(plotData[0] + ".Plots." + plotData[1] + ".Owner"))).getName();
             sender.sendRawMessage("Only the plot owner can manage a plot. This plot is owned by " + ownerName + ".");
             return true;

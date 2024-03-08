@@ -35,6 +35,7 @@ public class PlayerDeathListener implements Listener {
         if (claimant != null && plot != null && Objects.requireNonNull(cityData.getString(plot[0] + ".Plots." + plot[1] + ".Type")).equalsIgnoreCase("arena")) {
             event.setKeepInventory(true);
             event.setKeepLevel(true);
+            event.getDrops().clear();
             return;
         }
 
