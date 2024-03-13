@@ -56,7 +56,7 @@ public class ApplyPressure {
 
                 if(daysSinceLastAdd > decayBoostTimer) {
                     double decayBoost = (daysSinceLastAdd-decayBoostTimer)*decayBoostModifier;
-                    influenceDecay = (int) (influenceDecay*decayBoost);
+                    influenceDecay = (int) (influenceDecay+decayBoost);
                 }
 
                 claimData.set(chunkKey+".Claims."+claim+".Pressure",pressure);

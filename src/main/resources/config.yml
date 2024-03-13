@@ -9,12 +9,16 @@ ClaimMaximum: 2000
 # DecayConstant is the minimum amount of influence that a claim will lose when influence decay is applied. Must be a positive integer.
 DecayConstant: 10
 # DecayBoostTimer is the number of real-life days without receiving positive influence that must pass before a claim received boosted decay. Must be a positive integer. Set DecayBoostModifier to 0 to disable decay boost.
-DecayBoostTimer: 10
+DecayBoostTimer: 5
 # DecayBoostModifier is the additive modifier to decay for each day without positive influence passed beyond DecayBoostTimer. Must be a positive integer or double. Set DecayBoostModifier to 0 to disable decay boost.
-DecayBoostModifier: 0.10
+DecayBoostModifier: 10.00
 
-# PressureTimer is the number of real-life hours between pressure and influence decay being applied to claims. Pressure and influence decay will be applied on server restart and every PressureTimer hours after. Must be a positive integer.
+# PressureBeaconsActive determines whether Pressure Beacons can be crafted and used.
+PressureBeaconsActive: true
+# PressureTimer is the number of real-life hours between pressure and influence decay being applied to claims. Pressure and influence decay will be applied on server restart and every PressureTimer hours after. Must be a positive double.
 PressureTimer: 3
+# PressureBeaconTimer is the number of real-life hours between pressure being applied by pressure beacons. Must be a positive double.
+PressureBeaconTimer: 0.25
 
 # ElectionFrequency is the number of real-life days between elections occurring in democracies and oligarchies. Must be a positive integer.
 ElectionFrequency: 15

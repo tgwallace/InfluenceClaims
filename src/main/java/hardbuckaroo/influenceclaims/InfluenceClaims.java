@@ -13,6 +13,10 @@ import hardbuckaroo.influenceclaims.city.plots.listeners.ArenaRespawnListener;
 import hardbuckaroo.influenceclaims.city.plots.listeners.EnterPlotListener;
 import hardbuckaroo.influenceclaims.city.plots.listeners.PlotExpandListenerCity;
 import hardbuckaroo.influenceclaims.city.plots.listeners.PlotSelectListenerCity;
+import hardbuckaroo.influenceclaims.city.pressurebeacons.ApplyBeaconPressure;
+import hardbuckaroo.influenceclaims.city.pressurebeacons.PressureBeaconBreakListener;
+import hardbuckaroo.influenceclaims.city.pressurebeacons.PressureBeaconManager;
+import hardbuckaroo.influenceclaims.city.pressurebeacons.PressureBeaconPlaceListener;
 import hardbuckaroo.influenceclaims.nation.ApplyTimedNationLegitimacy;
 import hardbuckaroo.influenceclaims.nation.ManageNationLegitimacy;
 import hardbuckaroo.influenceclaims.nation.commands.*;
@@ -26,6 +30,7 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -41,6 +46,7 @@ import org.dynmap.markers.MarkerSet;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class InfluenceClaims extends JavaPlugin {
@@ -251,7 +257,7 @@ public class InfluenceClaims extends JavaPlugin {
         },0,1750000);
 
         //Setting timer for recurring application of pressure. 72000 is the number of ticks in an hour.
-        long pressureTimer = this.getConfig().getLong("PressureTimer") * 72000;
+        long pressureTimer = (long) (this.getConfig().getDouble("PressureTimer") * 72000);
         Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(this, ap::applyPressure, 30, pressureTimer);
 
         //Setting timer for recurring checks on resolving elections and starting new scheduled elections.
@@ -272,6 +278,17 @@ public class InfluenceClaims extends JavaPlugin {
             UpdateDynMap updateDynMap = new UpdateDynMap(this);
             long dynTimer = this.getConfig().getLong("DynMapFrequency") * 72000;
             Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(this, updateDynMap::updateDynMap, 30, dynTimer);
+        }
+
+        //Set up pressure beacons.
+        if(getConfig().getBoolean("PressureBeaconsActive")) {
+            PressureBeaconManager pressureBeaconManager = new PressureBeaconManager(this);
+            pressureBeaconManager.addRecipe();
+            Bukkit.getPluginManager().registerEvents(new PressureBeaconPlaceListener(this, pressureBeaconManager), this);
+            Bukkit.getPluginManager().registerEvents(new PressureBeaconBreakListener(this, pressureBeaconManager), this);
+            long pressureBeaconTimer = (long) (this.getConfig().getDouble("PressureBeaconTimer") * 72000);
+            ApplyBeaconPressure abp = new ApplyBeaconPressure(this, pressureBeaconManager);
+            Bukkit.getScheduler().runTaskTimer(this, abp::applyPressure, 0, pressureBeaconTimer);
         }
 
         Bukkit.getScheduler().runTaskTimer(this, this::saveClaimData,1200,1200);
@@ -626,5 +643,19 @@ public class InfluenceClaims extends JavaPlugin {
                 InfluenceClaims.getChat().setPlayerPrefix(null,player,null);
             }
         }
+    }
+
+    public String getBlockKey(Block block) {
+        return block.getWorld().getName()+","+block.getX()+","+block.getY()+","+block.getZ();
+    }
+
+    public Block getBlockFromKey(String blockKey) {
+        String[] keyParts = blockKey.split(",");
+        World world = Bukkit.getServer().getWorld(keyParts[0]);
+        if(world == null) {
+            getLogger().log(Level.WARNING,"Null world check, has "+keyParts[0]+" been deleted?");
+            return null;
+        }
+        else return world.getBlockAt(Integer.parseInt(keyParts[1]),Integer.parseInt(keyParts[2]),Integer.parseInt(keyParts[3]));
     }
 }
