@@ -1,6 +1,7 @@
 package hardbuckaroo.influenceclaims;
 
 import hardbuckaroo.influenceclaims.InfluenceClaims;
+import hardbuckaroo.influenceclaims.city.elections.CityElectionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -56,18 +57,28 @@ public class LoginListener implements Listener {
             String cityName = cityData.getString(cityUUID + ".Name");
 
             if (cityData.contains(cityUUID + ".Elections")) {
-                List<String> cityElectorate = new ArrayList<>();
-                String cityGov = cityData.getString(cityUUID + ".Government");
+                List<String> cityElectorate;
                 for (String issue : cityData.getConfigurationSection(cityUUID + ".Elections").getKeys(false)) {
-                    if (cityGov.equalsIgnoreCase("Democracy") || issue.equalsIgnoreCase("Overthrow")) {
-                        cityElectorate = cityData.getStringList(cityUUID + ".Players");
-                    } else if (cityGov.equalsIgnoreCase("Oligarchy")) {
-                        cityElectorate = cityData.getStringList(cityUUID + ".Nobles");
-                    }
+                    CityElectionManager manager = new CityElectionManager(plugin);
+                    cityElectorate = manager.getElectorate(cityUUID,issue);
+
                     if (cityElectorate.contains(playerUUID)) {
-                        player.sendRawMessage(plugin.color("Elections are currently underway in " + cityName + "! If you are eligible to vote, use /CityVote to cast your vote or check the results."));
+                        player.sendRawMessage(plugin.color("Elections are currently underway in " + cityName + "! Use /CityVote to cast your vote or check the results."));
                         break;
                     }
+                }
+            }
+        } else if (playerData.contains(playerUUID+".Exile")) {
+            String exileUUID = playerData.getString(playerUUID+".Exile");
+            List<String> cityElectorate;
+            String cityName = cityData.getString(exileUUID + ".Name");
+            for (String issue : cityData.getConfigurationSection(exileUUID + ".Elections").getKeys(false)) {
+                CityElectionManager manager = new CityElectionManager(plugin);
+                cityElectorate = manager.getElectorate(exileUUID,issue);
+
+                if (cityElectorate.contains(playerUUID)) {
+                    player.sendRawMessage(plugin.color("Elections are currently underway to overthrow the government of " + cityName + "! As an exile, you can use /CityVote to participate. If your faction wins, you will be able to rejoin the city!"));
+                    break;
                 }
             }
         }

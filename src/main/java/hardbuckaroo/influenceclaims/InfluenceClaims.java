@@ -91,6 +91,9 @@ public class InfluenceClaims extends JavaPlugin {
         //Inviting a player to join your city:
         CityInvite cityInvite = new CityInvite(this);
         Objects.requireNonNull(getCommand("cityinvite")).setExecutor(cityInvite);
+        //Revoking an invite to join your city:
+        CityRevokeInvite cityRevokeInvite = new CityRevokeInvite(this);
+        Objects.requireNonNull(getCommand("cityrevokeinvite")).setExecutor(cityInvite);
         //Accepting an invitation to a city:
         CityAccept cityAccept = new CityAccept(this);
         Objects.requireNonNull(getCommand("cityaccept")).setExecutor(cityAccept);
@@ -499,6 +502,12 @@ public class InfluenceClaims extends JavaPlugin {
     //Returns a chunk key for a given chunk.
     public String getChunkKey(Chunk chunk){
         return chunk.getWorld().getName()+","+chunk.getX()+","+chunk.getZ();
+    }
+
+    public Chunk getChunkFromKey(String chunkKey) {
+        String[] chunkParts = chunkKey.split(",");
+        World world = Bukkit.getWorld(chunkParts[0]);
+        return world.getChunkAt(Integer.parseInt(chunkParts[1]),Integer.parseInt(chunkParts[2]));
     }
 
     //Finds the UUID of a city given its name. Used in player commands that reference a city by name.

@@ -58,18 +58,25 @@ public class CityAccept implements CommandExecutor {
                 //Set city in player data.
                 playerData.set(playerID + ".City", invite);
                 playerData.set(playerID + ".Invites", null);
-                plugin.savePlayerData();
 
                 //Add player to city data.
                 List<String> players = cityData.getStringList(invite+".Players");
                 players.add(playerID);
                 cityData.set(invite + ".Players",players);
-                plugin.saveCityData();
+
+                //Remove exile tags if set.
+                String exile = playerData.getString(playerID+".Exile");
+                List<String> exiled = cityData.getStringList(exile+".Exiles");
+                exiled.remove(playerID);
+                cityData.set(exile+".Exiles",exiled);
+                playerData.set(playerID+".Exile",null);
 
                 //Lets city members know that a new member has joined.
                 plugin.cityMessage(invite,cityData.getString(invite+".Color")+player.getName()+" has joined " + cityData.getString(invite+".Name") + "!");
 
                 plugin.updateScoreboard();
+                plugin.savePlayerData();
+                plugin.saveCityData();
             }
             return true;
         }
