@@ -23,9 +23,9 @@ public class CityStartScheduledElections {
         }
 
         for(String cityUUID : cityData.getKeys(false)) {
-            if((Objects.requireNonNull(cityData.getString(cityUUID + ".Government")).equalsIgnoreCase("Democracy") || Objects.requireNonNull(cityData.getString(cityUUID + ".Government")).equalsIgnoreCase("Oligarchy")) && !cityData.contains(cityUUID+".Elections.Overthrow")) {
+            if((Objects.requireNonNull(cityData.getString(cityUUID + ".Government")).equalsIgnoreCase("Democracy") || Objects.requireNonNull(cityData.getString(cityUUID + ".Government")).equalsIgnoreCase("Oligarchy")) && !cityData.contains(cityUUID+".Elections.Overthrow") && !cityData.contains(cityUUID+".Elections.Leader")) {
                 LocalDate lastElection = LocalDate.parse(Objects.requireNonNull(cityData.getString(cityUUID + ".LastElection")));
-                if(ChronoUnit.DAYS.between(lastElection, today) >= interval && !cityData.contains(cityUUID+".Elections.Leader")) {
+                if(ChronoUnit.DAYS.between(lastElection, today) >= interval) {
                     CityStartElection cityStartElection = new CityStartElection(plugin);
                     cityStartElection.startElection(cityUUID);
                     if(cityData.contains(cityUUID+".Elections.SpecialElection"))

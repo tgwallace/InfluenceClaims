@@ -17,6 +17,10 @@ commands:
     description: Used to invite player(s) to your city.
     usage: /CityInvite [playername1] [playername2] [playername3]
     aliases: [cadd, cityadd, cinvite]
+  CityRevokeInvite:
+    description: Used to revoke invites of player(s) to your city.
+    usage: /CityInvite [playername1] [playername2] [playername3]
+    aliases: [crevoke]
   CityAccept:
     description: Used to accept an invite to join a city.
     usage: /CityAccept

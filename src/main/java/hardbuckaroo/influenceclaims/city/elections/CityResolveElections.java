@@ -21,6 +21,7 @@ public class CityResolveElections {
     public void resolveElections(){
         FileConfiguration cityData = plugin.getCityData();
         FileConfiguration nationData = plugin.getNationData();
+        FileConfiguration playerData = plugin.getPlayerData();
         LocalDate today = LocalDate.now();
         double interval = plugin.getConfig().getDouble("ElectionLength");
         double victoryThreshold = plugin.getConfig().getDouble("SuperMajorityThreshold");
@@ -93,14 +94,9 @@ public class CityResolveElections {
                     }
 
                     if(!issue.equalsIgnoreCase("Overthrow") && !issue.equalsIgnoreCase("Leader")) {
-                        List<String> electorate;
                         String government = cityData.getString(cityUUID+".Government");
-
-                        if(Objects.requireNonNull(government).equalsIgnoreCase("Oligarchy")){
-                            electorate = cityData.getStringList(cityUUID+".Nobles");
-                        } else {
-                            electorate = cityData.getStringList(cityUUID+".Players");
-                        }
+                        CityElectionManager manager = new CityElectionManager(plugin);
+                        List<String> electorate = manager.getElectorate(cityUUID,issue);
 
                         if((!requiresSuperMajority && maxVotes > ((double) electorate.size() /2)) || (requiresSuperMajority && maxVotes > ((double) electorate.size() * victoryThreshold))) {
                             quickResolve = true;
@@ -177,6 +173,9 @@ public class CityResolveElections {
                                 for(String voter : voterList) {
                                     if(Objects.requireNonNull(cityData.getString(cityUUID + ".Elections.Overthrow.VoteCount." + voter)).equalsIgnoreCase("Democracy")) {
                                         successorList.add(voter);
+                                        if(playerData.getString(voter+".City") == null) {
+                                            playerData.set(voter+".Invites",cityUUID);
+                                        }
                                     }
                                 }
                                 String successor = successorList.get(rand.nextInt(successorList.size()));
@@ -190,6 +189,9 @@ public class CityResolveElections {
                                 for(String voter : voterList) {
                                     if(Objects.requireNonNull(cityData.getString(cityUUID + ".Elections.Overthrow.VoteCount." + voter)).equalsIgnoreCase("Oligarchy")) {
                                         successorList.add(voter);
+                                        if(playerData.getString(voter+".City") == null) {
+                                            playerData.set(voter+".Invites",cityUUID);
+                                        }
                                     }
                                 }
                                 String successor = successorList.get(rand.nextInt(successorList.size()));
@@ -203,6 +205,9 @@ public class CityResolveElections {
                                 for(String voter : voterList) {
                                     if(Objects.requireNonNull(cityData.getString(cityUUID + ".Elections.Overthrow.VoteCount." + voter)).equalsIgnoreCase("New_Monarch")) {
                                         successorList.add(voter);
+                                        if(playerData.getString(voter+".City") == null) {
+                                            playerData.set(voter+".Invites",cityUUID);
+                                        }
                                     }
                                 }
                                 String successor = successorList.get(rand.nextInt(successorList.size()));
@@ -211,10 +216,13 @@ public class CityResolveElections {
                                 String successorName = Bukkit.getOfflinePlayer(UUID.fromString(successor)).getName();
                                 cityStartElection.startElection(cityUUID);
                                 plugin.cityMessage(cityUUID,"The government of " + cityName + " has been overthrown! " + successorName + " has been chosen as regent and a special election has begun to choose the new " + leaderTitle + ".",true);
-                            }  else if(winner.equalsIgnoreCase("Monarchy")){
+                            } else if(winner.equalsIgnoreCase("Monarchy")){
                                 for(String voter : voterList) {
                                     if(Objects.requireNonNull(cityData.getString(cityUUID + ".Elections.Overthrow.VoteCount." + voter)).equalsIgnoreCase("Monarchy")) {
                                         successorList.add(voter);
+                                        if(playerData.getString(voter+".City") == null) {
+                                            playerData.set(voter+".Invites",cityUUID);
+                                        }
                                     }
                                 }
                                 String successor = successorList.get(rand.nextInt(successorList.size()));
@@ -282,6 +290,7 @@ public class CityResolveElections {
                     }
                 }
                 plugin.saveCityData();
+                plugin.savePlayerData();
             }
         }
 

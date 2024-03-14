@@ -1,8 +1,10 @@
 package hardbuckaroo.influenceclaims.city;
 
 import hardbuckaroo.influenceclaims.InfluenceClaims;
+import hardbuckaroo.influenceclaims.city.plots.CheckPlot;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.time.LocalDate;
@@ -34,8 +36,8 @@ public class ManageClaims {
             } else if (stance == null) {
                 int oldValueTemp = claimData.getInt(chunkKey + ".Claims." + cityUUID + ".Temporary");
                 int newValueTemp = amount + oldValueTemp;
-                if(newValueTemp > plugin.getConfig().getInt("ClaimMinimum")) {
-                    newValueTemp = plugin.getConfig().getInt("ClaimMinimum");
+                if(newValueTemp > plugin.getConfig().getInt("ClaimMaximum")) {
+                    newValueTemp = plugin.getConfig().getInt("ClaimMaximum");
                 }
                 claimData.set(chunkKey + ".Claims." + cityUUID + ".Temporary", newValueTemp);
                 return;

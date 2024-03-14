@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.checkerframework.checker.units.qual.C;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -32,15 +33,16 @@ public class CityVote implements CommandExecutor, Listener {
 
         if(playerData.contains(uuid+".City")) {
             cityUUID = playerData.getString(uuid+".City");
-        }
-        else {
+        } else if (playerData.contains(uuid+".Exile")) {
+            cityUUID = playerData.getString(uuid+".Exile");
+        } else {
             player.sendRawMessage("You are not part of a city.");
             return true;
         }
 
         String government = cityData.getString(cityUUID+".Government");
-        List<String> electorate = new ArrayList<>();
-        
+
+        CityElectionManager manager = new CityElectionManager(plugin);
         if(cityData.getConfigurationSection(cityUUID+".Elections") == null) {
             player.sendRawMessage("There are no active elections in " + cityData.getString(cityUUID+".Name") + ".");
             return true;
@@ -50,22 +52,10 @@ public class CityVote implements CommandExecutor, Listener {
         if(strings.length < 2) {
             //Opening with solid line in city's color.
             TextComponent message = new TextComponent(plugin.color(cityData.getString(cityUUID + ".Color") + "&m                                                     "));
+
             Boolean canVote = false;
             for (String issue : cityData.getConfigurationSection(cityUUID + ".Elections").getKeys(false)) {
-                if (government.equalsIgnoreCase("Democracy") || issue.equalsIgnoreCase("Overthrow")) {
-                    electorate = cityData.getStringList(cityUUID + ".Players");
-                } else if (government.equalsIgnoreCase("Oligarchy")) {
-                    if(cityData.contains(cityUUID+".Roles")) {
-                        for (String title : cityData.getConfigurationSection(cityUUID + ".Roles").getKeys(false)) {
-                            if(cityData.getBoolean(cityUUID+".Roles."+title+".Permissions.Vote")) {
-                                electorate.addAll(cityData.getStringList(cityUUID + ".Roles." + title + ".Players"));
-                            }
-                        }
-                        Set<String> dedupe = new LinkedHashSet<>(electorate);
-                        electorate.clear();
-                        electorate.addAll(dedupe);
-                    }
-                }
+                List<String> electorate = manager.getElectorate(cityUUID,issue);
 
                 if(electorate.contains(uuid)) {
                     canVote = true;
@@ -134,20 +124,7 @@ public class CityVote implements CommandExecutor, Listener {
             String voteName = voteChoice;
 
             if(cityData.contains(cityUUID+".Elections."+voteIssue)) {
-                if (government.equalsIgnoreCase("Democracy") || voteIssue.equalsIgnoreCase("Overthrow")) {
-                    electorate = cityData.getStringList(cityUUID + ".Players");
-                } else if (government.equalsIgnoreCase("Oligarchy")) {
-                    if(cityData.contains(cityUUID+".Roles")) {
-                        for (String title : cityData.getConfigurationSection(cityUUID + ".Roles").getKeys(false)) {
-                            if(cityData.getBoolean(cityUUID+".Roles."+title+".Permissions.Vote")) {
-                                electorate.addAll(cityData.getStringList(cityUUID + ".Roles." + title + ".Players"));
-                            }
-                        }
-                        Set<String> dedupe = new LinkedHashSet<>(electorate);
-                        electorate.clear();
-                        electorate.addAll(dedupe);
-                    }
-                }
+                List<String> electorate = manager.getElectorate(cityUUID,voteIssue);
 
                 if(!electorate.contains(uuid)) {
                     player.sendRawMessage("You are ineligible to vote in this election.");

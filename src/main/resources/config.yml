@@ -40,6 +40,9 @@ LegitimacyGain: 0.05
 # SuperMajorityThreshold is the percentage of votes that an option must receive in a vote that requires a supermajority to succeed (Government changes, Special Elections, and leaving a nation). Must be a positive double greater than 0.50.
 SuperMajorityThreshold: 0.66
 
+# AbsenteeTimer is the number of real-life days that a voter must be inactive before they are removed from the electorate. Must be a positive integer.
+AbsenteeTimer: 10
+
 # ChunkBoostEnabled determines whether players can spend economy money in exchange for temporary claim points on a chunk.
 ChunkBoostEnabled: true
 # ChunkBoostPermanentRate and ChunkBoostTemporaryRate determine how many points of each type of claim the chunk will receive for each dollar spent. Must be a positive integer or double.

@@ -35,7 +35,6 @@ public class CityKick implements CommandExecutor {
             return true;
         }
         String cityUUID = playerData.getString(sender.getUniqueId().toString() + ".City");
-        List<String> nobles = cityData.getStringList(cityUUID+".Nobles");
 
         boolean perms = false;
         if(cityData.contains(cityUUID+".Roles")) {
@@ -57,6 +56,7 @@ public class CityKick implements CommandExecutor {
         for(String name : strings) {
             OfflinePlayer recipient = Bukkit.getOfflinePlayer(name);
             List<String> players = cityData.getStringList(cityUUID+".Players");
+            List<String> exiles = cityData.getStringList(cityUUID+".Exiles");
             if (recipient.getUniqueId().equals(sender.getUniqueId())){
                 sender.sendRawMessage("You cannot kick yourself from a city. Use /CityLeave to leave instead.");
             } else if(!players.contains(recipient.getUniqueId().toString())){
@@ -72,11 +72,14 @@ public class CityKick implements CommandExecutor {
                     }
                 }
 
-                //Remove player in cityData:
+                //Remove player and add to exiles in cityData:
                 players.remove(recipient.getUniqueId().toString());
                 cityData.set(cityUUID + ".Players",players);
+                exiles.add(recipient.getUniqueId().toString());
+                cityData.set(cityUUID+".Exlies",exiles);
                 plugin.saveCityData();
-                //Remove player in playerData:
+                //Remove player and add to exiles in playerData:
+                playerData.set(recipient.getUniqueId().toString()+".Exile",cityUUID);
                 playerData.set(recipient.getUniqueId().toString()+".City",null);
                 playerData.set(recipient.getUniqueId().toString()+".PlotMode",false);
                 playerData.set(recipient.getUniqueId().toString()+".PlotCorner1",null);
