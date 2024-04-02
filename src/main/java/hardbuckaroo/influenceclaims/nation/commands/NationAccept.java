@@ -62,7 +62,7 @@ public class NationAccept implements CommandExecutor {
             //Sends the player a list of clickable invites.
             for(String invite : cityData.getStringList(cityUUID + ".NationInvites")) {
                 component = new TextComponent(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "You have been invited to join the nation of &l" + nationData.getString(invite + ".Name") + "&r. Click here to accept.")));
-                component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/cityaccept " + invite));
+                component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nationaccept " + invite));
                 player.spigot().sendMessage(component);
             }
             return true;

@@ -157,6 +157,9 @@ public class InfluenceClaims extends JavaPlugin {
         //Allows nation leaders to invite cities to their nation.
         NationInvite nationInvite = new NationInvite(this);
         Objects.requireNonNull(getCommand("nationinvite")).setExecutor(nationInvite);
+        //Accepts an invitation to a nation
+        NationAccept nationAccept = new NationAccept(this);
+        Objects.requireNonNull(getCommand("nationaccept")).setExecutor(nationAccept);
         //Toggles nation chat channel.
         NationChat nationChat = new NationChat(this);
         Objects.requireNonNull(getCommand("nationchat")).setExecutor(nationChat);
@@ -219,6 +222,7 @@ public class InfluenceClaims extends JavaPlugin {
         //Registering events.
         Bukkit.getPluginManager().registerEvents(new BlockPlaceListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BlockBreakListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new PistonPushBlockListener(this), this);
         Bukkit.getPluginManager().registerEvents(new MiscListeners(this), this);
         Bukkit.getPluginManager().registerEvents(new CraftItemListener(this), this);
         Bukkit.getPluginManager().registerEvents(new EnchantItemListener(this), this);
@@ -513,7 +517,7 @@ public class InfluenceClaims extends JavaPlugin {
     //Finds the UUID of a city given its name. Used in player commands that reference a city by name.
     public String getCityUUIDFromName(String name){
         for(String cityUUID : cityData.getKeys(false)){
-            if(Objects.requireNonNull(cityData.getString(cityUUID + ".Name")).equals(name)){
+            if(cityData.contains(cityUUID + ".Name") && cityData.getString(cityUUID + ".Name").equalsIgnoreCase(name)){
                 return cityUUID;
             }
         }

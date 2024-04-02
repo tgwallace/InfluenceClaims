@@ -98,6 +98,7 @@ public class CityRole implements CommandExecutor {
                 cityData.set(cityUUID+".Roles."+title+".Permissions.Vote",false);
                 cityData.set(cityUUID+".Roles."+title+".Permissions.PlotCreate",false);
                 cityData.set(cityUUID+".Roles."+title+".Permissions.PlotRevoke",false);
+                cityData.set(cityUUID+".Roles."+title+".Permissions.Unclaim",false);
 
                 sender.sendRawMessage("You have created a new role called " + title + "!");
             } else {
@@ -140,6 +141,13 @@ public class CityRole implements CommandExecutor {
                 title = title.substring(title.indexOf(" ") + 1);
 
                 if (cityData.contains(cityUUID + ".Roles." + title)) {
+                    if(cityData.contains(cityUUID+".Roles."+title+".Permissions.Invite")) cityData.set(cityUUID+".Roles."+title+".Permissions.Invite",false);
+                    if(cityData.contains(cityUUID+".Roles."+title+".Permissions.Kick")) cityData.set(cityUUID+".Roles."+title+".Permissions.Kick",false);
+                    if(cityData.contains(cityUUID+".Roles."+title+".Permissions.Vote")) cityData.set(cityUUID+".Roles."+title+".Permissions.Vote",false);
+                    if(cityData.contains(cityUUID+".Roles."+title+".Permissions.PlotCreate")) cityData.set(cityUUID+".Roles."+title+".Permissions.PlotCreate",false);
+                    if(cityData.contains(cityUUID+".Roles."+title+".Permissions.PlotRevoke")) cityData.set(cityUUID+".Roles."+title+".Permissions.PlotRevoke",false);
+                    if(cityData.contains(cityUUID+".Roles."+title+".Permissions.Unclaim")) cityData.set(cityUUID+".Roles."+title+".Permissions.Unclaim",false);
+
                     sender.sendRawMessage("Permissions for " + title + " are listed below. Click a permission to toggle it.");
                     for (String permission : cityData.getConfigurationSection(cityUUID + ".Roles." + title + ".Permissions").getKeys(false)) {
                         TextComponent component = new TextComponent(permission + ": " + cityData.getBoolean(cityUUID + ".Roles." + title + ".Permissions." + permission));

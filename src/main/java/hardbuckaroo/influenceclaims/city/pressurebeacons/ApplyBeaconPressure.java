@@ -77,7 +77,6 @@ public class ApplyBeaconPressure {
                 }
             }
         }
-        plugin.saveCityData();
         plugin.saveClaimData();
         count++;
     }

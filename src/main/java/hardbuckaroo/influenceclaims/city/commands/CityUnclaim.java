@@ -29,8 +29,18 @@ public class CityUnclaim implements CommandExecutor {
         }
         String cityUUID = playerData.getString(sender.getUniqueId().toString() + ".City");
 
-        if(!cityData.getString(cityUUID+".Leader").equals(playerUUID)){
-            sender.sendRawMessage("Only the " + cityData.getString(cityUUID+".LeaderTitle") + " can unclaim chunks!");
+        boolean perms = false;
+        if(cityData.contains(cityUUID+".Roles")) {
+            for (String title : cityData.getConfigurationSection(cityUUID + ".Roles").getKeys(false)) {
+                if (cityData.getStringList(cityUUID + ".Roles.Players").contains(playerUUID)) {
+                    perms = cityData.getBoolean(cityUUID + ".Roles." + title + ".Permissions.Unclaim");
+                }
+                if(perms) break;
+            }
+        }
+
+        if(!cityData.getString(cityUUID+".Leader").equals(playerUUID) && !perms){
+            sender.sendRawMessage("You do not have permission to unclaim chunks!");
             return true;
         }
 

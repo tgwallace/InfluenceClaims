@@ -76,7 +76,7 @@ public class CityKick implements CommandExecutor {
                 players.remove(recipient.getUniqueId().toString());
                 cityData.set(cityUUID + ".Players",players);
                 exiles.add(recipient.getUniqueId().toString());
-                cityData.set(cityUUID+".Exlies",exiles);
+                cityData.set(cityUUID+".Exiles",exiles);
                 plugin.saveCityData();
                 //Remove player and add to exiles in playerData:
                 playerData.set(recipient.getUniqueId().toString()+".Exile",cityUUID);

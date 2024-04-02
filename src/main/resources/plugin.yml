@@ -105,6 +105,10 @@ commands:
     description: Allows nation leaders to invite cities to their nation.
     usage: /NationInvite [cityname]
     aliases: [ninvite]
+  NationAccept:
+    description: Allows city leaders to accept invites to nations.
+    usage: /NationAccept
+    aliases: [naccept]
   NationChat:
     description: Toggles nation chat channel.
     usage: /NationChat
