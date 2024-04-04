@@ -13,6 +13,7 @@ import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Damageable;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -33,75 +34,43 @@ public class PistonPushBlockListener implements Listener {
 
     @EventHandler
     public void onPistonExtendEvent(BlockPistonExtendEvent event){
-        FileConfiguration playerData = plugin.getPlayerData();
         List<Block> blockList = event.getBlocks();
+        CoreProtectAPI CoreProtect = plugin.getCoreProtect();
         BlockFace direction = event.getDirection();
 
         for(Block block : blockList) {
-            List<String[]> blocklog = CoreProtect.getInstance().getAPI().blockLookup(block, (int)(System.currentTimeMillis() / 1000L));
-            String mostRecentPlacer;
-            String claimToDecrease = null;
-            String chunkKey = plugin.getChunkKey(block.getChunk());
-
-            if(!blocklog.isEmpty()) {
-                for(String[] action : blocklog) {
-                    CoreProtectAPI CoreProtect = plugin.getCoreProtect();
-                    CoreProtectAPI.ParseResult parseResult = CoreProtect.parseResult(action);
-                    if (parseResult.getActionId() == 1) {
-                        Material material = parseResult.getBlockData().getMaterial();
-                        if(material == block.getType()) {
-                            mostRecentPlacer = parseResult.getPlayer();
-                            claimToDecrease = playerData.getString(Bukkit.getOfflinePlayer(mostRecentPlacer).getUniqueId().toString() + ".City");
-                            break;
-                        }
-                    }
+            block = block.getRelative(direction);
+            double distance = 100;
+            Player player = null;
+            for(Entity entity : block.getLocation().getWorld().getNearbyEntities(block.getLocation(),distance,distance,distance)) {
+                double between = block.getLocation().distance(entity.getLocation());
+                if(entity instanceof Player && between < distance) {
+                    player = (Player) entity;
+                    distance = between;
                 }
             }
-
-            if(claimToDecrease != null) {
-                ManageClaims manageClaims = new ManageClaims(plugin);
-                int blockValue = plugin.getConfig().getInt("BlockValues." + block.getType().name());
-                if (blockValue == 0) blockValue = plugin.getConfig().getInt("DefaultValue");
-                manageClaims.subtractTempClaim(chunkKey,claimToDecrease,blockValue);
-                manageClaims.subtractPermClaim(chunkKey,claimToDecrease,blockValue);
-            }
+            CoreProtect.logPlacement(player.getName(),block.getLocation(),block.getType(), block.getBlockData());
         }
     }
 
     @EventHandler
     public void onPistonRetractEvent(BlockPistonRetractEvent event){
-        FileConfiguration playerData = plugin.getPlayerData();
         List<Block> blockList = event.getBlocks();
+        CoreProtectAPI CoreProtect = plugin.getCoreProtect();
         BlockFace direction = event.getDirection();
 
         for(Block block : blockList) {
-            List<String[]> blocklog = CoreProtect.getInstance().getAPI().blockLookup(block, (int)(System.currentTimeMillis() / 1000L));
-            String mostRecentPlacer;
-            String claimToDecrease = null;
-            String chunkKey = plugin.getChunkKey(block.getChunk());
-
-            if(!blocklog.isEmpty()) {
-                for(String[] action : blocklog) {
-                    CoreProtectAPI CoreProtect = plugin.getCoreProtect();
-                    CoreProtectAPI.ParseResult parseResult = CoreProtect.parseResult(action);
-                    if (parseResult.getActionId() == 1) {
-                        Material material = parseResult.getBlockData().getMaterial();
-                        if(material == block.getType()) {
-                            mostRecentPlacer = parseResult.getPlayer();
-                            claimToDecrease = playerData.getString(Bukkit.getOfflinePlayer(mostRecentPlacer).getUniqueId().toString() + ".City");
-                            break;
-                        }
-                    }
+            block = block.getRelative(direction);
+            double distance = 100;
+            Player player = null;
+            for(Entity entity : block.getLocation().getWorld().getNearbyEntities(block.getLocation(),distance,distance,distance)) {
+                double between = block.getLocation().distance(entity.getLocation());
+                if(entity instanceof Player && between < distance) {
+                    player = (Player) entity;
+                    distance = between;
                 }
             }
-
-            if(claimToDecrease != null) {
-                ManageClaims manageClaims = new ManageClaims(plugin);
-                int blockValue = plugin.getConfig().getInt("BlockValues." + block.getType().name());
-                if (blockValue == 0) blockValue = plugin.getConfig().getInt("DefaultValue");
-                manageClaims.subtractTempClaim(chunkKey,claimToDecrease,blockValue);
-                manageClaims.subtractPermClaim(chunkKey,claimToDecrease,blockValue);
-            }
+            CoreProtect.logPlacement(player.getName(),block.getLocation(),block.getType(), block.getBlockData());
         }
     }
 }

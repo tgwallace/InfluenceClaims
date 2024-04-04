@@ -32,7 +32,7 @@ public class CityUnclaim implements CommandExecutor {
         boolean perms = false;
         if(cityData.contains(cityUUID+".Roles")) {
             for (String title : cityData.getConfigurationSection(cityUUID + ".Roles").getKeys(false)) {
-                if (cityData.getStringList(cityUUID + ".Roles.Players").contains(playerUUID)) {
+                if (cityData.getStringList(cityUUID + ".Roles."+title+".Players").contains(playerUUID)) {
                     perms = cityData.getBoolean(cityUUID + ".Roles." + title + ".Permissions.Unclaim");
                 }
                 if(perms) break;

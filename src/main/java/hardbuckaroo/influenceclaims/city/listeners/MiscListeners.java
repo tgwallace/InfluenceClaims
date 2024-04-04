@@ -74,6 +74,8 @@ public class MiscListeners implements Listener {
 
     @EventHandler
     public void playerInteractEntityEvent(PlayerInteractEntityEvent event) {
+        if(event.getRightClicked() instanceof Minecart || event.getRightClicked() instanceof Boat || event.getRightClicked() instanceof Horse) return;
+
         CheckProtection cp = new CheckProtection(plugin);
         if(cp.checkProtectionSimple(event.getRightClicked().getLocation().getBlock(), event.getPlayer())){
             event.setCancelled(true);

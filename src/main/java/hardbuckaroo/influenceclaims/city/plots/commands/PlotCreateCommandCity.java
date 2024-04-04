@@ -35,7 +35,7 @@ public class PlotCreateCommandCity implements CommandExecutor {
         boolean perms = false;
         if(cityData.contains(cityUUID+".Roles")) {
             for (String title : cityData.getConfigurationSection(cityUUID + ".Roles").getKeys(false)) {
-                if (cityData.getStringList(cityUUID + ".Roles.Players").contains(senderUUID)) {
+                if (cityData.getStringList(cityUUID + ".Roles."+title+".Players").contains(senderUUID)) {
                     perms = cityData.getBoolean(cityUUID + ".Roles." + title + ".Permissions.PlotCreate");
                 }
                 if(perms) break;

@@ -68,7 +68,8 @@ public class BlockBreakListener implements Listener {
             }
         }
         else if(Arrays.asList(Material.BROWN_MUSHROOM, Material.MELON, Material.KELP_PLANT, Material.SUGAR_CANE,
-                Material.CACTUS, Material.RED_MUSHROOM, Material.PUMPKIN).contains(block.getType()) && cityUUID != null) {
+                Material.CACTUS, Material.RED_MUSHROOM, Material.PUMPKIN,
+                Material.ACACIA_LOG, Material.BIRCH_LOG, Material.CHERRY_LOG, Material.DARK_OAK_LOG, Material.JUNGLE_LOG, Material.MANGROVE_LOG, Material.OAK_LOG, Material.SPRUCE_LOG).contains(block.getType()) && cityUUID != null) {
 
             String mostRecentPlacer = null;
             String mostRecentPlacerClaim = null;
@@ -91,7 +92,7 @@ public class BlockBreakListener implements Listener {
             }
 
             int blockValue = plugin.getConfig().getInt("BlockValues." + block.getType().name());
-            if (blockValue == 0) blockValue = plugin.getConfig().getInt("DefaultValue");
+            if (blockValue == 0 || block.getType().toString().contains("LOG")) blockValue = plugin.getConfig().getInt("DefaultValue");
 
             if(mostRecentPlacerClaim == null || !mostRecentPlacerClaim.equals(cityUUID)) {
                 manageClaims.addTempClaim(chunkKey,cityUUID,blockValue);

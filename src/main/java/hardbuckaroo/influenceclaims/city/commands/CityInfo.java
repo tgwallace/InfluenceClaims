@@ -27,6 +27,7 @@ public class CityInfo implements CommandExecutor, Listener {
         String uuid = player.getUniqueId().toString();
         FileConfiguration cityData = plugin.getCityData();
         FileConfiguration playerData = plugin.getPlayerData();
+        FileConfiguration nationData = plugin.getNationData();
         String city;
 
         if(strings.length == 0){
@@ -55,13 +56,22 @@ public class CityInfo implements CommandExecutor, Listener {
         TextComponent cityName = new TextComponent(plugin.color(cityData.getString(city + ".Color") + "&l" + cityData.getString(city + ".Name")));
         player.spigot().sendMessage(cityName);
         //City motto:
-        if(cityData.contains(city+".Motto")) {
+        if(cityData.contains(city+".Motto") && !cityData.getString(city+".Motto").equalsIgnoreCase(" ")) {
             TextComponent motto = new TextComponent(plugin.color("&o" + cityData.getString(city + ".Motto")));
             player.spigot().sendMessage(motto);
         }
         //Total Influence:
         TextComponent influence = new TextComponent("Total Influence: " + NumberFormat.getInstance().format(cityData.getLong(city+".TotalInfluence")));
         player.spigot().sendMessage(influence);
+        //Nation
+        if(cityData.contains(city+".Nation")) {
+            String nationUUID = cityData.getString(city+".Nation");
+            String nationName =  nationData.getString(nationUUID+".Name");
+            String nationColor = nationData.getString(nationUUID+".Color");
+            TextComponent nation = new TextComponent("Nation: " + plugin.color(nationColor + nationName));
+            nation.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/nationinfo " + nationName));
+            player.spigot().sendMessage(nation);
+        }
         //City government:
         TextComponent government = new TextComponent(plugin.color("Government: "+ WordUtils.capitalize(cityData.getString(city+".Government")) + " (" + String.format("%.0f%%",100*cityData.getDouble(city+".Legitimacy"))+" Legitimacy)"));
         player.spigot().sendMessage(government);

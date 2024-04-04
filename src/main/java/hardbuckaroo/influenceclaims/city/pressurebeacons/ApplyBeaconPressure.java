@@ -45,7 +45,19 @@ public class ApplyBeaconPressure {
                     int level = beacon.getTier();
                     if(level == 0) return;
 
-                    if(level == 4 || (level == 3 && (count == 1 || count == 3 || count == 5 || count == 7)) || (level == 2 && (count == 1 || count == 5)) || (level == 1 && count == 1)) {
+                    String chunkKey = plugin.getChunkKey(block.getChunk());
+                    int chunkCount = 0;
+                    for (int x = -1; x <= 1; x++) {
+                        for (int z = -1; z <= 1; z++) {
+                            String[] chunkParts = chunkKey.split(",");
+                            String pressuredChunk = chunkParts[0] + "," + (parseInt(chunkParts[1]) + x) + "," + (parseInt(chunkParts[2]) + z);
+                            String claimant = plugin.getClaimant(pressuredChunk);
+                            String stance = cityData.getString(cityUUID+".Stances."+claimant);
+                            if(stance != null && stance.equalsIgnoreCase("Hostile")) chunkCount++;
+                        }
+                    }
+
+                    if(chunkCount > 0 && (level == 4 || (level == 3 && (count == 1 || count == 3 || count == 5 || count == 7)) || (level == 2 && (count == 1 || count == 5)) || (level == 1 && count == 1))) {
                         Block above = block.getRelative(BlockFace.UP);
                         if (above.getState() instanceof Container) {
                             Inventory inventory = ((Container) above.getState()).getInventory();
@@ -53,16 +65,19 @@ public class ApplyBeaconPressure {
                                 if (stack != null) {
                                     Material material = stack.getType();
                                     int value = plugin.getConfig().getInt("BlockValues." + material.name());
-                                    int pressure = value / 9;
+                                    int pressure = value / chunkCount;
                                     if (pressure > 0) {
                                         inventory.removeItem(new ItemStack(material, 1));
                                         ManageClaims manageClaims = new ManageClaims(plugin);
-                                        String chunkKey = plugin.getChunkKey(block.getChunk());
                                         for (int x = -1; x <= 1; x++) {
                                             for (int z = -1; z <= 1; z++) {
                                                 String[] chunkParts = chunkKey.split(",");
                                                 String pressuredChunk = chunkParts[0] + "," + (parseInt(chunkParts[1]) + x) + "," + (parseInt(chunkParts[2]) + z);
-                                                manageClaims.addTempClaim(pressuredChunk, cityUUID, pressure);
+                                                String claimant = plugin.getClaimant(pressuredChunk);
+                                                String stance = cityData.getString(cityUUID+".Stances."+claimant);
+                                                if(stance != null && stance.equalsIgnoreCase("Hostile")) {
+                                                    manageClaims.addTempClaim(pressuredChunk, cityUUID, pressure);
+                                                }
                                             }
                                         }
                                         break;
