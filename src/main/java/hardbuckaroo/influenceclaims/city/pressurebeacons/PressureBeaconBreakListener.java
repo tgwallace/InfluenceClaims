@@ -57,7 +57,7 @@ public class PressureBeaconBreakListener implements Listener {
     @EventHandler (ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onPressureBeaconExplode(EntityExplodeEvent event) {
         List<Block> blockList = event.blockList();
-        List<Block> removeBlocks = new java.util.ArrayList<>(List.copyOf(blockList));
+        List<Block> removeBlocks = new java.util.ArrayList<>();
         for (Block block : blockList) {
             if (block.getType() == Material.BEACON) {
                 FileConfiguration cityData = plugin.getCityData();

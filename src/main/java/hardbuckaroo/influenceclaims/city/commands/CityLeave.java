@@ -52,6 +52,7 @@ public class CityLeave implements CommandExecutor, Listener {
                 cityData.set(currentCity, null);
                 playerData.set(uuid + ".City", null);
                 playerData.set(uuid+".PlotMode",false);
+                playerData.set(uuid+".ChatChannel","World");
                 player.sendRawMessage("You have left " + cityName + " and the city has been disbanded.");
                 FileConfiguration claimData = plugin.getClaimData();
                 for(String chunkKey : claimData.getKeys(false)) {
@@ -63,6 +64,7 @@ public class CityLeave implements CommandExecutor, Listener {
             } else {
                 cityData.set(currentCity + ".Players", remainingPlayers);
                 playerData.set(uuid+".City",null);
+                playerData.set(uuid+".ChatChannel","World");
                 if (cityData.getString(currentCity + ".Leader").equalsIgnoreCase(uuid)) {
                     List<String> heirList = cityData.getStringList(currentCity + ".Nobles");
                     if (!heirList.isEmpty()) {

@@ -83,6 +83,7 @@ public class CityKick implements CommandExecutor {
                 playerData.set(recipient.getUniqueId().toString()+".City",null);
                 playerData.set(recipient.getUniqueId().toString()+".PlotMode",false);
                 playerData.set(recipient.getUniqueId().toString()+".PlotCorner1",null);
+                playerData.set(recipient+".ChatChannel","World");
                 plugin.savePlayerData();
 
                 //Message removed player if they're online, set a message in playerData if they're not:

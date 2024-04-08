@@ -10,6 +10,7 @@ import org.bukkit.block.data.Hangable;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
@@ -128,7 +129,7 @@ public class MiscListeners implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGHEST)
     public void onEntityExplodeEvent(EntityExplodeEvent event) {
         List<Block> blockList = event.blockList();
         CheckProtection cp = new CheckProtection(plugin);

@@ -24,7 +24,7 @@ public class ApplyTimedCityLegitimacy {
         for (String cityUUID : cityData.getKeys(false)) {
             String leaderUUID = cityData.getString(cityUUID+".Leader");
             LocalDate leaderLastLogin = LocalDate.parse(Objects.requireNonNull(playerData.getString(leaderUUID + ".LastLogin")));
-            int diff = (int) ChronoUnit.DAYS.between(today,leaderLastLogin);
+            int diff = (int) ChronoUnit.DAYS.between(leaderLastLogin,today);
 
             if(diff > legitimacyTimer) {
                 manageCityLegitimacy.subtractLegitimacy(cityUUID,plugin.getConfig().getDouble("AbsenteeLegitimacyLoss"));

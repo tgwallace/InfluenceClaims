@@ -92,9 +92,10 @@ public class BlockBreakListener implements Listener {
             }
 
             int blockValue = plugin.getConfig().getInt("BlockValues." + block.getType().name());
-            if (blockValue == 0 || block.getType().toString().contains("LOG")) blockValue = plugin.getConfig().getInt("DefaultValue");
+
 
             if(mostRecentPlacerClaim == null || !mostRecentPlacerClaim.equals(cityUUID)) {
+                if (blockValue == 0 || block.getType().toString().contains("LOG")) blockValue = plugin.getConfig().getInt("DefaultValue");
                 manageClaims.addTempClaim(chunkKey,cityUUID,blockValue);
             } else {
                 manageClaims.subtractTempClaim(chunkKey,mostRecentPlacerClaim,blockValue);

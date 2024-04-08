@@ -123,17 +123,6 @@ public class RailBreakListener implements Listener {
                 || traceRail(originalRail.getRelative(0,-1,0),event.getPlayer())
         ) {
             event.setCancelled(true);
-        } else if(originalRail.getBlockData().getMaterial().toString().contains("RAIL") && Bukkit.getPluginManager().getPlugin("dynmap") != null && Bukkit.getServer().getPluginManager().getPlugin("dynmap").isEnabled() && plugin.getConfig().getBoolean("DynMapRails")) {
-            DynmapAPI dynmap = InfluenceClaims.dapi;
-            MarkerSet m = dynmap.getMarkerAPI().getMarkerSet("RailProtect.markerset");
-            if(m == null) {
-                m = dynmap.getMarkerAPI().createMarkerSet("RailProtect.markerset", "Rail Lines", null, false);
-            }
-            AreaMarker am = m.createAreaMarker(originalRail.getWorld().getName()+"."+originalRail.getX()+"."+originalRail.getY()+"."+originalRail.getZ(), "Rail Line", true, originalRail.getWorld().getName(), new double[]{originalRail.getX(), originalRail.getX()+1}, new double[]{originalRail.getZ(), originalRail.getZ()+1}, false);
-            if(am!=null) {
-                am.setFillStyle(1, 0x000000);
-                am.setLineStyle(1, 1, 0x000000);
-            }
         }
     }
 
@@ -188,6 +177,7 @@ public class RailBreakListener implements Listener {
 
         boolean isProt1 = false, isProt2 = false, isWild1 = true, isWild2 = true;
         int maxDistance = Bukkit.spigot().getConfig().getInt("MaxDistance"), currentDistance = 0;
+        List<Block> blockList = new ArrayList<>();
 
         for (int x = 1; x <= 2; x++) {
             Block backRail = originalRail;
@@ -266,7 +256,7 @@ public class RailBreakListener implements Listener {
                         break;
                 }
             }
-            while (frontRail.getBlockData().getMaterial().toString().contains("RAIL") && !frontRail.equals(originalRail) && (maxDistance == 0 || currentDistance < maxDistance)) {
+            while (frontRail.getBlockData().getMaterial().toString().contains("RAIL") && !frontRail.equals(originalRail) && !blockList.contains(frontRail) && (maxDistance == 0 || currentDistance < maxDistance)) {
                 if(blockCache.containsKey(frontRail.toString()) && blockCache.get(frontRail.toString()).equalsIgnoreCase(player.getUniqueId().toString())) {
                     blockCache.put(originalRail.toString(),player.getUniqueId().toString());
                     Bukkit.getScheduler().runTaskLater(plugin, () -> blockCache.remove(originalRail.toString()),72000);
@@ -452,8 +442,9 @@ public class RailBreakListener implements Listener {
                         frontRail = frontRail.getRelative(-1, 0, 0);
                     }
                 }
+                blockList.add(backRail);
             }
-            if(frontRail.equals(originalRail)){
+            if(frontRail.equals(originalRail) || blockList.contains(frontRail)){
                 return false;
             }
 
@@ -469,29 +460,48 @@ public class RailBreakListener implements Listener {
             }
         }
 
+        boolean value;
         if(isProt1 && isProt2) {
-            return true;
+            value = true;
         }
         else if(isProt1 && !isWild1 && !isProt2 && !isWild2) {
             blockCache.put(originalRail.toString(),player.getUniqueId().toString());
             Bukkit.getScheduler().runTaskLater(plugin, () -> blockCache.remove(originalRail.toString()),72000);
-            return false;
+            value = false;
         }
         else if(isProt2 && !isWild2 && !isProt1 && !isWild1) {
             blockCache.put(originalRail.toString(),player.getUniqueId().toString());
             Bukkit.getScheduler().runTaskLater(plugin, () -> blockCache.remove(originalRail.toString()),72000);
-            return false;
+            value = false;
         }
         else if (isProt1 && isWild2) {
-            return true;
+            value = true;
         }
         else if (isProt2 && isWild1) {
-            return true;
+            value = true;
         }
         else {
             blockCache.put(originalRail.toString(),player.getUniqueId().toString());
             Bukkit.getScheduler().runTaskLater(plugin, () -> blockCache.remove(originalRail.toString()),72000);
-            return false;
+            value = false;
         }
+
+        if((isProt1 || isProt2) && Bukkit.getPluginManager().getPlugin("dynmap") != null && Bukkit.getServer().getPluginManager().getPlugin("dynmap").isEnabled() && plugin.getConfig().getBoolean("DynMapRails")) {
+            DynmapAPI dynmap = InfluenceClaims.dapi;
+            MarkerSet m = dynmap.getMarkerAPI().getMarkerSet("RailProtect.markerset");
+            if(m == null) {
+                m = dynmap.getMarkerAPI().createMarkerSet("RailProtect.markerset", "Rail Lines", null, false);
+            }
+
+            for(Block register : blockList) {
+                AreaMarker am = m.createAreaMarker(register.getWorld().getName() + "." + register.getX() + "." + register.getY() + "." + register.getZ(), "Rail Line", true, register.getWorld().getName(), new double[]{register.getX(), register.getX() + 1}, new double[]{register.getZ(), register.getZ() + 1}, false);
+                if (am != null) {
+                    am.setFillStyle(1, 0x000000);
+                    am.setLineStyle(1, 1, 0x000000);
+                }
+            }
+        }
+
+        return value;
     }
 }

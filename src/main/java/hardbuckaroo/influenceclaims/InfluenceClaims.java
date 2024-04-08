@@ -218,7 +218,6 @@ public class InfluenceClaims extends JavaPlugin {
         PopulationList populationList = new PopulationList(this);
         Objects.requireNonNull(getCommand("citypopulationlist")).setExecutor(populationList);
 
-
         //Registering events.
         Bukkit.getPluginManager().registerEvents(new BlockPlaceListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BlockBreakListener(this), this);
@@ -297,6 +296,8 @@ public class InfluenceClaims extends JavaPlugin {
             ApplyBeaconPressure abp = new ApplyBeaconPressure(this, pressureBeaconManager);
             Bukkit.getScheduler().runTaskTimer(this, abp::applyPressure, 0, pressureBeaconTimer);
         }
+
+
 
         Bukkit.getScheduler().runTaskTimer(this, this::saveClaimData,1200,1200);
     }
